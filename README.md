@@ -1,2 +1,1 @@
-# lthwgcp
-Learn the hard Way - Google Cloud Platform
+# Learn the hard Way - Google Cloud Platform
