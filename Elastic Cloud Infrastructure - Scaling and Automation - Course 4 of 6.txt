@@ -1,0 +1,9 @@
+# Elastic Cloud Infrastructure: Scaling and Automation
+
+## Lab: Virtual Private Networks (VPN) v1.5
+https://googlecoursera.qwiklabs.com/focuses/21490
+Project ID: 
+
+## Lab: Virtual Machine Automation and Load Balancing v1.5
+https://googlecoursera.qwiklabs.com/focuses/21489
+

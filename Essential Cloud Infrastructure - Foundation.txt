@@ -1,0 +1,827 @@
+# Essential Cloud Infrastructure: Foundation
+
+## Console and Cloud Shell v1.5
+https://googlecoursera.qwiklabs.com/focuses/21476
+
+## Infrastructure Preview v1.5
+https://googlecoursera.qwiklabs.com/focuses/21474
+Project ID: qwiklabs-gcp-e92fcf5019c61c59
+
+Connected, host fingerprint: ssh-rsa 0 03:AC:D9:AD:9F:66:DD:E3:1B:C5:C8:3B:C1:D3:50:E2:36:C9:B5:77:7A:E3:ED:09:40:83:CE:EE:5D:08:59:65
+Linux jenkins-1-vm 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u3 (2019-06-16) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+       ___ _ _                   _
+      | _ |_) |_ _ _  __ _ _ __ (_)
+      | _ \ |  _| ' \/ _` | '  \| |
+      |___/_|\__|_|_|\__,_|_|_|_|_|
+
+  *** Welcome to the Bitnami Jenkins 2.176.1-0 ***
+  *** Documentation:  https://docs.bitnami.com/google/apps/jenkins/ ***
+  ***                 https://docs.bitnami.com/google/ ***
+  *** Bitnami Forums: https://community.bitnami.com/ ***
+Creating directory '/home/google3981730_student'.
+google3981730_student@jenkins-1-vm:~$ cat /proc/version
+Linux version 4.9.0-9-amd64 (debian-kernel@lists.debian.org) (gcc version 6.3.0 20170516 (Debian 6.3.0-18+deb9u1) ) #1 SMP Debian 4.9.168-1+deb9u3 (2019-06-16)
+google3981730_student@jenkins-1-vm:~$ sudo /opt/bitnami/c
+changelog.txt  common/        config/        ctlscript.sh   
+google3981730_student@jenkins-1-vm:~$ sudo /opt/bitnami/ctlscript.sh stop
+Syntax OK
+/opt/bitnami/apache2/scripts/ctl.sh : httpd stopped
+Using CATALINA_BASE:   /opt/bitnami/apache-tomcat
+Using CATALINA_HOME:   /opt/bitnami/apache-tomcat
+Using CATALINA_TMPDIR: /opt/bitnami/apache-tomcat/temp
+Using JRE_HOME:        /opt/bitnami/java
+Using CLASSPATH:       /opt/bitnami/apache-tomcat/bin/bootstrap.jar:/opt/bitnami/apache-tomcat/bin/tomcat-juli.jar
+Using CATALINA_PID:    /opt/bitnami/apache-tomcat/temp/catalina.pid
+Tomcat stopped.
+/opt/bitnami/apache-tomcat/scripts/ctl.sh : tomcat stopped
+google3981730_student@jenkins-1-vm:~$ 
+google3981730_student@jenkins-1-vm:~$ sudo /opt/bitnami/ctlscript.sh restart
+Syntax OK
+/opt/bitnami/apache2/scripts/ctl.sh : apache not running
+/opt/bitnami/apache-tomcat/scripts/ctl.sh : tomcat not running
+Using CATALINA_BASE:   /opt/bitnami/apache-tomcat
+Using CATALINA_HOME:   /opt/bitnami/apache-tomcat
+Using CATALINA_TMPDIR: /opt/bitnami/apache-tomcat/temp
+Using JRE_HOME:        /opt/bitnami/java
+Using CLASSPATH:       /opt/bitnami/apache-tomcat/bin/bootstrap.jar:/opt/bitnami/apache-tomcat/bin/tomcat-juli.jar
+Using CATALINA_PID:    /opt/bitnami/apache-tomcat/temp/catalina.pid
+Tomcat started.
+/opt/bitnami/apache-tomcat/scripts/ctl.sh : tomcat started
+Syntax OK
+/opt/bitnami/apache2/scripts/ctl.sh : httpd started at port 80
+google3981730_student@jenkins-1-vm:~$ 
+
+
+## Virtual Networking v1.5
+## URL: https://googlecoursera.qwiklabs.com/focuses/21473
+### Task 1: Create the network topology
+Project ID: qwiklabs-gcp-09c8b6531336ddad
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks
+{
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "name": "learnauto",
+  "description": "Learn about auto-mode networks",
+  "autoCreateSubnetworks": true
+}
+
+
+
+VPC network
+Create a VPC network
+
+Name 
+learnauto
+Description (Optional)
+Learn about auto-mode networks
+Subnets
+Subnets let you create your own private cloud topology within Google Cloud. Click Automatic to create a subnet in each region, or click Custom to manually define the subnets. Learn more
+
+Subnet creation mode
+ 
+These IP address ranges will be assigned to each region in your VPC network. When an instance is created for your VPC network, it will be assigned an IP from the appropriate region’s address range.
+  
+Region	IP address range
+us-central1	10.128.0.0/20
+europe-west1	10.132.0.0/20
+us-west1	10.138.0.0/20
+asia-east1	10.140.0.0/20
+us-east1	10.142.0.0/20
+asia-northeast1	10.146.0.0/20
+asia-southeast1	10.148.0.0/20
+us-east4	10.150.0.0/20
+australia-southeast1	10.152.0.0/20
+europe-west2	10.154.0.0/20
+  
+ Firewall rules 
+Select any of the firewall rules below that you would like to apply to this VPC network. Once the VPC network is created, you can manage all firewall rules on the Firewall rules page.
+
+Name	Type	Targets	Filters	Protocols / ports	Action	Priority
+learnauto-allow-icmp 
+Ingress	Apply to all	
+IP ranges: 0.0.0.0/0
+icmp
+Allow
+65534
+learnauto-allow-internal 
+Ingress	Apply to all	
+IP ranges: 10.128.0.0/9
+all
+Allow
+65534
+learnauto-allow-rdp 
+Ingress	Apply to all	
+IP ranges: 0.0.0.0/0
+tcp:3389
+Allow
+65534
+learnauto-allow-ssh 
+Ingress	Apply to all	
+IP ranges: 0.0.0.0/0
+tcp:22
+Allow
+65534
+learnauto-deny-all-ingress 
+Ingress	Apply to all	
+IP ranges: 0.0.0.0/0
+all
+Deny
+65535
+learnauto-allow-all-egress 
+Egress	Apply to all	
+IP ranges: 0.0.0.0/0
+all
+Allow
+65535
+ Dynamic routing mode 
+ 
+Regional
+Cloud Routers will learn routes only in the region in which they were created
+
+ 
+Global
+Global routing lets you dynamically learn routes to and from all regions with a single VPN or interconnect and Cloud Router
+
+DNS server policy (Optional)
+ 
+Equivalent REST or command line
+
+
+
+Press alt-p to pin/unpin a section to the top of the menu.
+gcloud command line
+This is the gcloud command line with the parameters you have selected.
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad networks create learnauto --description="Learn about auto-mode networks" --subnet-mode=auto
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad firewall-rules create learnauto-allow-icmp --description="Allows ICMP connections from any source to any instance on the network." --direction=INGRESS --priority=65534 --network=learnauto --action=ALLOW --rules=icmp --source-ranges=0.0.0.0/0
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad firewall-rules create learnauto-allow-internal --description="Allows connections from any source in the network IP range to any instance on the network using all protocols." --direction=INGRESS --priority=65534 --network=learnauto --action=ALLOW --rules=all --source-ranges=10.128.0.0/9
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad firewall-rules create learnauto-allow-rdp --description="Allows RDP connections from any source to any instance on the network using port 3389." --direction=INGRESS --priority=65534 --network=learnauto --action=ALLOW --rules=tcp:3389 --source-ranges=0.0.0.0/0
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad firewall-rules create learnauto-allow-ssh --description="Allows TCP connections from any source to any instance on the network using port 22." --direction=INGRESS --priority=65534 --network=learnauto --action=ALLOW --rules=tcp:22 --source-ranges=0.0.0.0/0
+
+### Create a custom-mode network
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks
+{
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "name": "learncustom",
+  "description": "Learn about custom networks",
+  "autoCreateSubnetworks": false
+}
+
+
+
+VPC network
+Create a VPC network
+
+Name 
+learncustom
+Description (Optional)
+Learn about custom networks
+Subnets
+Subnets let you create your own private cloud topology within Google Cloud. Click Automatic to create a subnet in each region, or click Custom to manually define the subnets. Learn more
+
+Subnet creation mode
+ 
+subnet-1a
+subnet-1b
+New subnet
+Name 
+subnet-2
+Add a description
+Region 
+IP address range 
+192.168.7.0/24
+Create secondary IP range
+Private Google access 
+
+ 
+On
+ 
+Off
+Flow logs
+Turning on VPC flow logs doesn't affect performance, but some systems generate a large number of logs, which can increase costs in Stackdriver. Learn more
+
+ 
+ 
+On
+ 
+Off
+ 
+ Dynamic routing mode 
+ 
+Regional
+Cloud Routers will learn routes only in the region in which they were created
+
+ 
+Global
+Global routing lets you dynamically learn routes to and from all regions with a single VPN or interconnect and Cloud Router
+
+DNS server policy (Optional)
+ 
+Equivalent REST or command line
+
+
+
+Press alt-p to pin/unpin a section to the top of the menu.
+Equivalent REST request
+This is the REST request with the parameters you have selected.
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks
+{
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "name": "learncustom",
+  "description": "Learn about custom networks",
+  "autoCreateSubnetworks": false
+}
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/regions/us-central1/subnetworks
+{
+  "privateIpGoogleAccess": false,
+  "enableFlowLogs": false,
+  "name": "subnet-1a",
+  "ipCidrRange": "192.168.5.0/24",
+  "network": "https://clients6.google.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks/learncustom"
+}
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/regions/us-central1/subnetworks
+{
+  "privateIpGoogleAccess": false,
+  "enableFlowLogs": false,
+  "name": "subnet-1b",
+  "ipCidrRange": "192.168.3.0/24",
+  "network": "https://clients6.google.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks/learncustom"
+}
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/regions/us-west1/subnetworks
+{
+  "privateIpGoogleAccess": false,
+  "enableFlowLogs": false,
+  "name": "subnet-2",
+  "ipCidrRange": "192.168.7.0/24",
+  "network": "https://clients6.google.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/networks/learncustom"
+}
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad networks create learncustom --description="Learn about custom networks" --subnet-mode=custom
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad networks subnets create subnet-1a --network=learncustom --region=us-central1 --range=192.168.5.0/24
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad networks subnets create subnet-1b --network=learncustom --region=us-central1 --range=192.168.3.0/24
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad networks subnets create subnet-2 --network=learncustom --region=us-west1 --range=192.168.7.0/24
+
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-09c8b6531336ddad/global/firewalls
+{
+  "kind": "compute#firewall",
+  "name": "allow-ssh-icmp-rdp-learncustom",
+  "selfLink": "projects/qwiklabs-gcp-09c8b6531336ddad/global/firewalls/allow-ssh-icmp-rdp-learncustom",
+  "network": "projects/qwiklabs-gcp-09c8b6531336ddad/global/networks/learncustom",
+  "direction": "INGRESS",
+  "priority": 1000,
+  "description": "allow ssh, icmp, and rdp for learncustom network",
+  "targetTags": [
+    "allow-defaults"
+  ],
+  "allowed": [
+    {
+      "IPProtocol": "tcp",
+      "ports": [
+        "22",
+        "3389"
+      ]
+    },
+    {
+      "IPProtocol": "icmp"
+    }
+  ],
+  "sourceRanges": [
+    "0.0.0.0/0"
+  ]
+}
+
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad firewall-rules create allow-ssh-icmp-rdp-learncustom --description="allow ssh, icmp, and rdp for learncustom network" --direction=INGRESS --priority=1000 --network=learncustom --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/0 --target-tags=allow-defaults
+
+VM: learn-1
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad instances create learn-1 --zone=us-west1-a --machine-type=f1-micro --subnet=default --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=251632084351-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=learn-1
+
+VM: learn-2
+
+VM: learn-3
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad instances create learn-3 --zone=us-central1-a --machine-type=f1-micro --subnet=subnet-1a --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=251632084351-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=learn-3
+
+VM: learn-4
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad instances create learn-4 --zone=us-central1-b --machine-type=f1-micro --subnet=subnet-1b --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=251632084351-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=learn-4
+
+VM: learn-5
+gcloud compute --project=qwiklabs-gcp-09c8b6531336ddad instances create learn-5 --zone=us-west2-a --machine-type=f1-micro --subnet=subnet-2 --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=251632084351-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=learn-5
+
+
+### Test connection
+Connected, host fingerprint: ssh-rsa 0 09:FF:EB:E5:3E:19:BC:82:D0:09:18:C3:FA:A1:48:57:18:5F:DD:1B:68:02:A3:4D:CF:B4:29:9F:1B:E2:FD:5A
+Linux learn-1 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u3 (2019-06-16) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Creating directory '/home/google3989495_student'.
+google3989495_student@learn-1:~$ hostname
+learn-1
+google3989495_student@learn-1:~$ ping learn-1
+PING learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal (10.168.0.2) 56(84) bytes of data.
+64 bytes from learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal (10.168.0.2): icmp_seq=1 ttl=64 time=0.034 ms
+64 bytes from learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal (10.168.0.2): icmp_seq=2 ttl=64 time=0.036 ms
+64 bytes from learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal (10.168.0.2): icmp_seq=3 ttl=64 time=0.035 ms
+64 bytes from learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal (10.168.0.2): icmp_seq=4 ttl=64 time=0.037 ms
+^C
+--- learn-1.c.qwiklabs-gcp-09c8b6531336ddad.internal ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3053ms
+rtt min/avg/max/mdev = 0.034/0.035/0.037/0.006 ms
+google3989495_student@learn-1:~$ ping -c 3 learn-2
+ping: learn-2: Name or service not known
+google3989495_student@learn-1:~$ # Because learn-1 and learn-2 are in different networks (default and learnauto)
+google3989495_student@learn-1:~$ 
+
+
+VM learn-3
+Connected, host fingerprint: ssh-rsa 0 33:41:14:C5:DF:74:E7:C1:98:D0:7E:18:76:3E:F7:62:6C:5C:0C:C6:8D:57:80:70:D5:BA:09:F1:70:EC:5A:66
+Linux learn-3 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u3 (2019-06-16) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Creating directory '/home/google3989495_student'.
+google3989495_student@learn-3:~$ hostname -f
+learn-3.c.qwiklabs-gcp-09c8b6531336ddad.internal
+google3989495_student@learn-3:~$ 
+
+google3989495_student@learn-3:~$ ping learn-4
+PING learn-4.c.qwiklabs-gcp-09c8b6531336ddad.internal (192.168.3.2) 56(84) bytes of data.
+^C
+--- learn-4.c.qwiklabs-gcp-09c8b6531336ddad.internal ping statistics ---
+4 packets transmitted, 0 received, 100% packet loss, time 3051ms
+
+google3989495_student@learn-3:~$ ping learn-5
+PING learn-5.c.qwiklabs-gcp-09c8b6531336ddad.internal (192.168.7.2) 56(84) bytes of data.
+^C
+--- learn-5.c.qwiklabs-gcp-09c8b6531336ddad.internal ping statistics ---
+6 packets transmitted, 0 received, 100% packet loss, time 5098ms
+
+google3989495_student@learn-3:~$ 
+
+## Bastion Host v1.5
+https://googlecoursera.qwiklabs.com/focuses/21477
+
+## Creating Virtual Machines v1.5
+https://googlecoursera.qwiklabs.com/focuses/21475
+Project ID: qwiklabs-gcp-dd7954bc2fe8557f
+
+VM1: vm-utility1
+CPU platform: Intel Haswell
+
+VM2: vm-windows2
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/europe-west2-a/instances
+{
+  "kind": "compute#instance",
+  "name": "vm-windows1",
+  "zone": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/europe-west2-a",
+  "machineType": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/europe-west2-a/machineTypes/n1-standard-2",
+  "displayDevice": {
+    "enableDisplay": false
+  },
+  "metadata": {
+    "kind": "compute#metadata",
+    "items": []
+  },
+  "tags": {
+    "items": [
+      "http-server",
+      "https-server"
+    ]
+  },
+  "disks": [
+    {
+      "kind": "compute#attachedDisk",
+      "type": "PERSISTENT",
+      "boot": true,
+      "mode": "READ_WRITE",
+      "autoDelete": true,
+      "deviceName": "vm-windows1",
+      "initializeParams": {
+        "sourceImage": "projects/windows-cloud/global/images/windows-server-2016-dc-core-v20190620",
+        "diskType": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/europe-west2-a/diskTypes/pd-ssd",
+        "diskSizeGb": "100"
+      }
+    }
+  ],
+  "canIpForward": false,
+  "networkInterfaces": [
+    {
+      "kind": "compute#networkInterface",
+      "subnetwork": "projects/qwiklabs-gcp-dd7954bc2fe8557f/regions/europe-west2/subnetworks/default",
+      "accessConfigs": [
+        {
+          "kind": "compute#accessConfig",
+          "name": "External NAT",
+          "type": "ONE_TO_ONE_NAT",
+          "networkTier": "PREMIUM"
+        }
+      ],
+      "aliasIpRanges": []
+    }
+  ],
+  "description": "",
+  "labels": {},
+  "scheduling": {
+    "preemptible": false,
+    "onHostMaintenance": "MIGRATE",
+    "automaticRestart": true,
+    "nodeAffinities": []
+  },
+  "deletionProtection": false,
+  "reservationAffinity": {
+    "consumeReservationType": "ANY_RESERVATION"
+  },
+  "serviceAccounts": [
+    {
+      "email": "121290169686-compute@developer.gserviceaccount.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/devstorage.read_only",
+        "https://www.googleapis.com/auth/logging.write",
+        "https://www.googleapis.com/auth/monitoring.write",
+        "https://www.googleapis.com/auth/servicecontrol",
+        "https://www.googleapis.com/auth/service.management.readonly",
+        "https://www.googleapis.com/auth/trace.append"
+      ]
+    }
+  ]
+}
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dd7954bc2fe8557f/global/firewalls
+{
+  "name": "default-allow-http",
+  "kind": "compute#firewall",
+  "sourceRanges": [
+    "0.0.0.0/0"
+  ],
+  "network": "projects/qwiklabs-gcp-dd7954bc2fe8557f/global/networks/default",
+  "targetTags": [
+    "http-server"
+  ],
+  "allowed": [
+    {
+      "IPProtocol": "tcp",
+      "ports": [
+        "80"
+      ]
+    }
+  ]
+}
+
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dd7954bc2fe8557f/global/firewalls
+{
+  "name": "default-allow-https",
+  "kind": "compute#firewall",
+  "sourceRanges": [
+    "0.0.0.0/0"
+  ],
+  "network": "projects/qwiklabs-gcp-dd7954bc2fe8557f/global/networks/default",
+  "targetTags": [
+    "https-server"
+  ],
+  "allowed": [
+    {
+      "IPProtocol": "tcp",
+      "ports": [
+        "443"
+      ]
+    }
+  ]
+}
+
+gcloud compute --project=qwiklabs-gcp-dd7954bc2fe8557f instances create vm-windows1 --zone=europe-west2-a --machine-type=n1-standard-2 --subnet=default --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=121290169686-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server,https-server --image=windows-server-2016-dc-core-v20190620 --image-project=windows-cloud --boot-disk-size=100GB --boot-disk-type=pd-ssd --boot-disk-device-name=vm-windows1
+
+gcloud compute --project=qwiklabs-gcp-dd7954bc2fe8557f firewall-rules create default-allow-http --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=http-server
+
+gcloud compute --project=qwiklabs-gcp-dd7954bc2fe8557f firewall-rules create default-allow-https --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:443 --source-ranges=0.0.0.0/0 --target-tags=https-server
+
+Username: google3993168_studen
+Password: 81&M:x6_3!U<fSV
+
+VM3: vm-custom1
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/us-west1-b/instances
+{
+  "kind": "compute#instance",
+  "name": "vm-custom1",
+  "zone": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/us-west1-b",
+  "machineType": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/us-west1-b/machineTypes/custom-6-32768",
+  "displayDevice": {
+    "enableDisplay": false
+  },
+  "metadata": {
+    "kind": "compute#metadata",
+    "items": []
+  },
+  "tags": {
+    "items": []
+  },
+  "disks": [
+    {
+      "kind": "compute#attachedDisk",
+      "type": "PERSISTENT",
+      "boot": true,
+      "mode": "READ_WRITE",
+      "autoDelete": true,
+      "deviceName": "vm-custom1",
+      "initializeParams": {
+        "sourceImage": "projects/debian-cloud/global/images/debian-9-stretch-v20190618",
+        "diskType": "projects/qwiklabs-gcp-dd7954bc2fe8557f/zones/us-west1-b/diskTypes/pd-standard",
+        "diskSizeGb": "10"
+      }
+    }
+  ],
+  "canIpForward": false,
+  "networkInterfaces": [
+    {
+      "kind": "compute#networkInterface",
+      "subnetwork": "projects/qwiklabs-gcp-dd7954bc2fe8557f/regions/us-west1/subnetworks/default",
+      "accessConfigs": [
+        {
+          "kind": "compute#accessConfig",
+          "name": "External NAT",
+          "type": "ONE_TO_ONE_NAT",
+          "networkTier": "PREMIUM"
+        }
+      ],
+      "aliasIpRanges": []
+    }
+  ],
+  "description": "",
+  "labels": {},
+  "scheduling": {
+    "preemptible": false,
+    "onHostMaintenance": "MIGRATE",
+    "automaticRestart": true,
+    "nodeAffinities": []
+  },
+  "deletionProtection": false,
+  "reservationAffinity": {
+    "consumeReservationType": "ANY_RESERVATION"
+  },
+  "serviceAccounts": [
+    {
+      "email": "121290169686-compute@developer.gserviceaccount.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/devstorage.read_only",
+        "https://www.googleapis.com/auth/logging.write",
+        "https://www.googleapis.com/auth/monitoring.write",
+        "https://www.googleapis.com/auth/servicecontrol",
+        "https://www.googleapis.com/auth/service.management.readonly",
+        "https://www.googleapis.com/auth/trace.append"
+      ]
+    }
+  ]
+}
+
+gcloud compute --project=qwiklabs-gcp-dd7954bc2fe8557f instances create vm-custom1 --zone=us-west1-b --machine-type=custom-6-32768 --subnet=default --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=121290169686-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=vm-custom1
+
+
+
+
+
+
+
+
+## Working with Virtual Machines v1.5
+https://googlecoursera.qwiklabs.com/focuses/21472
+Project ID: qwiklabs-gcp-55ef21a87db3373f
+
+VM1: mc-server
+POST https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a/instances
+{
+  "kind": "compute#instance",
+  "name": "mc-server",
+  "zone": "projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a",
+  "machineType": "projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a/machineTypes/n1-standard-1",
+  "displayDevice": {
+    "enableDisplay": false
+  },
+  "metadata": {
+    "kind": "compute#metadata",
+    "items": []
+  },
+  "tags": {
+    "items": [
+      "minecraft-server"
+    ]
+  },
+  "disks": [
+    {
+      "kind": "compute#attachedDisk",
+      "type": "PERSISTENT",
+      "boot": true,
+      "mode": "READ_WRITE",
+      "autoDelete": true,
+      "deviceName": "mc-server",
+      "initializeParams": {
+        "sourceImage": "projects/debian-cloud/global/images/debian-9-stretch-v20190618",
+        "diskType": "projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a/diskTypes/pd-standard",
+        "diskSizeGb": "10"
+      },
+      "diskEncryptionKey": {}
+    },
+    {
+      "kind": "compute#attachedDisk",
+      "mode": "READ_WRITE",
+      "autoDelete": false,
+      "type": "PERSISTENT",
+      "deviceName": "minecraft-disk",
+      "initializeParams": {
+        "diskName": "minecraft-disk",
+        "diskType": "projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a/diskTypes/pd-ssd",
+        "diskSizeGb": "50"
+      }
+    }
+  ],
+  "canIpForward": false,
+  "networkInterfaces": [
+    {
+      "kind": "compute#networkInterface",
+      "subnetwork": "projects/qwiklabs-gcp-55ef21a87db3373f/regions/us-central1/subnetworks/default",
+      "accessConfigs": [
+        {
+          "kind": "compute#accessConfig",
+          "name": "External NAT",
+          "type": "ONE_TO_ONE_NAT",
+          "natIP": "35.184.233.141",
+          "networkTier": "PREMIUM"
+        }
+      ],
+      "aliasIpRanges": []
+    }
+  ],
+  "description": "",
+  "labels": {},
+  "scheduling": {
+    "preemptible": false,
+    "onHostMaintenance": "MIGRATE",
+    "automaticRestart": true,
+    "nodeAffinities": []
+  },
+  "deletionProtection": false,
+  "reservationAffinity": {
+    "consumeReservationType": "ANY_RESERVATION"
+  },
+  "serviceAccounts": [
+    {
+      "email": "883992148537-compute@developer.gserviceaccount.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/servicecontrol",
+        "https://www.googleapis.com/auth/service.management.readonly",
+        "https://www.googleapis.com/auth/logging.write",
+        "https://www.googleapis.com/auth/monitoring.write",
+        "https://www.googleapis.com/auth/trace.append",
+        "https://www.googleapis.com/auth/devstorage.read_write"
+      ]
+    }
+  ]
+}
+
+gcloud beta compute --project=qwiklabs-gcp-55ef21a87db3373f instances create mc-server --zone=us-central1-a --machine-type=n1-standard-1 --subnet=default --address=35.184.233.141 --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=883992148537-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/trace.append,https://www.googleapis.com/auth/devstorage.read_write --tags=minecraft-server --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=mc-server --create-disk=mode=rw,size=50,type=projects/qwiklabs-gcp-55ef21a87db3373f/zones/us-central1-a/diskTypes/pd-ssd,name=minecraft-disk,device-name=minecraft-disk
+
+
+Connected, host fingerprint: ssh-rsa 0 72:32:40:F9:54:3D:0E:ED:30:9C:B2:15:52:8F:62:EF:52:AC:C1:CE:AA:98:E8:90:54:4C:3B:36:2B:34:C5:B0
+Linux mc-server 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u3 (2019-06-16) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Creating directory '/home/google3993834_student'.
+google3993834_student@mc-server:~$ sudo mkdir -p /home/minecraft
+google3993834_student@mc-server:~$ 
+google3993834_student@mc-server:~$ sudo mkfs.ext4 -F -E lazy_itable_init=0,\
+> lazy_journal_init=0,discard \
+> /dev/disk/by-id/google-minecraft-disk
+mke2fs 1.43.4 (31-Jan-2017)
+Discarding device blocks: done                            
+Creating filesystem with 13107200 4k blocks and 3276800 inodes
+Filesystem UUID: 9e9a0962-2da1-48b0-9edd-fdee585e976a
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624, 11239424
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (65536 blocks): done
+Writing superblocks and filesystem accounting information: done   
+
+google3993834_student@mc-server:~$
+
+google3993834_student@mc-server:~$ sudo mount -o discard,defaults /dev/disk/by-id/google-minecraft-disk /home/minecraft
+google3993834_student@mc-server:~$ ls /home/minecraft/
+lost+found
+google3993834_student@mc-server:~$ df -h /home/minecraft/
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb         49G   53M   47G   1% /home/minecraft
+google3993834_student@mc-server:~$ 
+
+google3993834_student@mc-server:~$ sudo apt update
+Get:1 http://security.debian.org stretch/updates InRelease [94.3 kB]
+Ign:2 http://deb.debian.org/debian stretch InRelease                            
+Get:3 http://deb.debian.org/debian stretch-updates InRelease [91.0 kB]          
+Get:4 http://packages.cloud.google.com/apt cloud-sdk-stretch InRelease [6,377 B]       
+Get:5 http://deb.debian.org/debian stretch-backports InRelease [91.8 kB]                            
+Hit:6 http://packages.cloud.google.com/apt google-compute-engine-stretch-stable InRelease
+Hit:7 http://deb.debian.org/debian stretch Release                       
+Hit:8 http://packages.cloud.google.com/apt google-cloud-packages-archive-keyring-stretch InRelease
+Get:9 http://packages.cloud.google.com/apt cloud-sdk-stretch/main amd64 Packages [77.0 kB]
+Get:10 http://security.debian.org stretch/updates/main Sources [208 kB]
+Get:11 http://security.debian.org stretch/updates/main amd64 Packages [499 kB]
+Get:12 http://security.debian.org stretch/updates/main Translation-en [223 kB]       
+Get:13 http://deb.debian.org/debian stretch-backports/main Sources.diff/Index [27.8 kB]
+Get:14 http://deb.debian.org/debian stretch-backports/main amd64 Packages.diff/Index [27.8 kB]
+Get:15 http://deb.debian.org/debian stretch-backports/main Translation-en.diff/Index [27.8 kB]
+Get:16 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-20-1417.31.pdiff [950 B]
+Get:17 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-20-2020.45.pdiff [31 B]
+Get:18 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-21-0820.00.pdiff [14.4 kB]
+Get:19 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-21-1418.31.pdiff [31 B]
+Get:20 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-21-2031.42.pdiff [44 B]
+Get:21 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-22-1420.02.pdiff [1,807 B]
+Get:22 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-22-2019.10.pdiff [46 B]
+Get:23 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-24-1417.21.pdiff [2,612 B]
+Get:24 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-24-2017.00.pdiff [62 B]
+Get:25 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-25-1418.21.pdiff [1,150 B]
+Get:26 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-20-2020.45.pdiff [805 B]
+Get:25 http://deb.debian.org/debian stretch-backports/main Sources 2019-06-25-1418.21.pdiff [1,150 B]
+Get:27 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-21-0820.00.pdiff [1,068 B]
+Get:28 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-21-1418.31.pdiff [3,981 B]
+Get:29 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-22-2019.10.pdiff [490 B]
+Get:30 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-24-2017.00.pdiff [1,044 B]
+Get:31 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-25-1418.21.pdiff [1,694 B]
+Get:32 http://deb.debian.org/debian stretch-backports/main Translation-en 2019-06-25-1418.21.pdiff [1,250 B]
+Get:31 http://deb.debian.org/debian stretch-backports/main amd64 Packages 2019-06-25-1418.21.pdiff [1,694 B]
+Get:32 http://deb.debian.org/debian stretch-backports/main Translation-en 2019-06-25-1418.21.pdiff [1,250 B]
+Fetched 1,405 kB in 1s (1,160 kB/s)                       
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+7 packages can be upgraded. Run 'apt list --upgradable' to see them.
+google3993834_student@mc-server:~$ 
+
+google3993834_student@mc-server:~$ cd /home/minecraft/
+google3993834_student@mc-server:/home/minecraft$ sudo wget https://s3.amazonaws.com/Minecraft.Download/versions/1.11.2/minecraft_server.1.11.2.jar
+--2019-07-01 10:04:24--  https://s3.amazonaws.com/Minecraft.Download/versions/1.11.2/minecraft_server.1.11.2.jar
+Resolving s3.amazonaws.com (s3.amazonaws.com)... 54.231.82.12
+Connecting to s3.amazonaws.com (s3.amazonaws.com)|54.231.82.12|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 9720835 (9.3M) [application/octet-stream]
+Saving to: ‘minecraft_server.1.11.2.jar’
+
+minecraft_server.1.11.2.jar  100%[=============================================>]   9.27M  32.0MB/s    in 0.3s    
+
+2019-07-01 10:04:24 (32.0 MB/s) - ‘minecraft_server.1.11.2.jar’ saved [9720835/9720835]
+
+google3993834_student@mc-server:/home/minecraft$ 
+
+google3993834_student@mc-server:/home/minecraft$ sudo java -Xms1G -Xmx7G -d64 -jar minecraft_server.1.11.2.jar nogu
+i
+[10:06:01] [Server thread/INFO]: Starting minecraft server version 1.11.2
+[10:06:01] [Server thread/INFO]: Loading properties
+[10:06:01] [Server thread/WARN]: server.properties does not exist
+[10:06:01] [Server thread/INFO]: Generating new properties file
+[10:06:01] [Server thread/WARN]: Failed to load eula.txt
+[10:06:01] [Server thread/INFO]: You need to agree to the EULA in order to run the server. Go to eula.txt for more info.
+[10:06:01] [Server thread/INFO]: Stopping server
+google3993834_student@mc-server:/home/minecraft$ 
+
+### Schedule regular backup
+export YOUR_BUCKET_NAME=ipractice1
+ 
+ 
+
+
+
+

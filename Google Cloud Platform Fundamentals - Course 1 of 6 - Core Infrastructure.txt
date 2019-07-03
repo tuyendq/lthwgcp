@@ -1,0 +1,335 @@
+# GCP Fundamentals
+## GCP Fundamentals: Getting Started with Cloud Marketplace
+https://googlecoursera.qwiklabs.com/focuses/17382#
+
+gcloud beta compute --project "qwiklabs-gcp-b45961227e21a64e" ssh --zone "us-central1-a" "lampstack-1-vm"
+
+## GCP Fundamentals: Getting Started with Compute Engine
+https://googlecoursera.qwiklabs.com/focuses/17383
+
+VM1=my-vm-1
+VM2=my-vm-2
+ZONE_US_CENTRAL1B=us-central1-b
+
+gcloud compute zones list | grep us-central1
+
+gcloud config set compute/zone $ZONE_US_CENTRAL1B
+
+gcloud compute instances create $VM2 \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image "debian-9-stretch-v20190213" \
+--subnet "default"
+
+
+# Install nginx-light
+sudo atp install nginx-light -y
+
+# Edit index page
+sudo nano /var/www/html/index.nginx-debian.html
+
+# Check index page after modifying
+curl http://localhost
+
+# Check index page from my-vm-2
+curl http://my-vm-1/
+
+
+## Storage Options
+https://googlecoursera.qwiklabs.com/focuses/17384
+
+#Deloy a web server
+VM_NAME=bloghost
+#Startup script
+apt-get update
+apt-get install apache2 php php-mysql -y
+service apache2 restart
+
+bloghost    35.238.76.38 
+blog-db     35.184.227.38
+root/simplesimple
+blogdbuser/simplesimple
+
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-ce1941abd8fc0961.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ export LOCATION=US
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ gsutil mb -l $LOCATION gs://DEVSHELL_PROJECT_ID
+Creating gs://DEVSHELL_PROJECT_ID/...
+BadRequestException: 400 Invalid bucket name: 'DEVSHELL_PROJECT_ID'
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID
+Creating gs://qwiklabs-gcp-ce1941abd8fc0961/...
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png
+Copying gs://cloud-training/gcpfci/my-excellent-blog.png...
+/ [1 files][  8.2 KiB/  8.2 KiB]
+Operation completed over 1 objects/8.2 KiB.
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+Copying file://my-excellent-blog.png [Content-Type=image/png]...
+/ [1 files][  8.2 KiB/  8.2 KiB]
+Operation completed over 1 objects/8.2 KiB.
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$ gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+Updated ACL on gs://qwiklabs-gcp-ce1941abd8fc0961/my-excellent-blog.png
+google3966684_student@cloudshell:~ (qwiklabs-gcp-ce1941abd8fc0961)$
+
+
+## GCP Fundamentals: Getting Started with Kubernetes Engine
+https://googlecoursera.qwiklabs.com/focuses/17385
+Project name: qwiklabs-gcp-d93a8c0341d707c9
+Project ID: qwiklabs-gcp-d93a8c0341d707c9
+export MY_ZONE=us-central1-a
+gcloud container clusters create webfrontend --zone $MY_ZONE --num-nodes 2
+# The gcloud container clusters create command automatically authenticated kubectl for you.
+kubectl version
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"12+", GitVersion:"v1.12.8-dispatcher", GitCommit:"1215389331387f57594b42c5dd024a2fe27334f8", GitTreeState:"clean", BuildDate:"2019-05-13T18:09:56Z", GoVersion:"go1.10.8", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"12+", GitVersion:"v1.12.8-gke.10", GitCommit:"f53039cc1e5295eed20969a4f10fb6ad99461e37", GitTreeState:"clean", BuildDate:"2019-06-19T20:48:40Z", GoVersion:"go1.10.8b4", Compiler:"gc", Platform:"linux/amd64"}
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl run nginx --image=nginx:1.10.0
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl run nginx --image=nginx:1.10.0
+kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed in a future version. Use kubectl create instead.
+deployment.apps/nginx created
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl get pods
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-5fc69dfb5d-hb9zn   1/1     Running   0          53s
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl expose deployment nginx --port 80 --type LoadBalancer
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl expose deployment nginx --port 80 --type LoadBalancer
+service/nginx exposed
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl get services
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl get services
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.52.0.1      <none>        443/TCP        5m18s
+nginx        LoadBalancer   10.52.13.103   <pending>     80:30276/TCP   27s
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl get services
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP       PORT(S)        AGE
+kubernetes   ClusterIP      10.52.0.1      <none>            443/TCP        5m45s
+nginx        LoadBalancer   10.52.13.103   104.198.224.165   80:30276/TCP   54s
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl scale deployment nginx --replicas 3
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl scale deployment nginx --replicas 3
+deployment.extensions/nginx scaled
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl get pods
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-5fc69dfb5d-hb9zn   1/1     Running   0          6m21s
+nginx-5fc69dfb5d-v2mgm   1/1     Running   0          40s
+nginx-5fc69dfb5d-vx2jn   1/1     Running   0          40s
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+kubectl get services
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$ kubectl get services
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP       PORT(S)        AGE
+kubernetes   ClusterIP      10.52.0.1      <none>            443/TCP        9m7s
+nginx        LoadBalancer   10.52.13.103   104.198.224.165   80:30276/TCP   4m16s
+google3976249_student@cloudshell:~ (qwiklabs-gcp-d93a8c0341d707c9)$
+
+
+
+## GCP Fundamentals: Getting Started with App Engine
+https://googlecoursera.qwiklabs.com/focuses/17386
+Project ID: qwiklabs-gcp-8dede7b966550313
+
+git clone https://github.com/GoogleCloudPlatform/appengine-guestbook-python
+google3976513_student@cloudshell:~ (qwiklabs-gcp-8dede7b966550313)$ git clone https://github.com/GoogleCloudPlatform/appengine-guestbook-python
+Cloning into 'appengine-guestbook-python'...
+remote: Enumerating objects: 493, done.
+remote: Total 493 (delta 0), reused 0 (delta 0), pack-reused 493
+Receiving objects: 100% (493/493), 437.58 KiB | 282.00 KiB/s, done.
+Resolving deltas: 100% (203/203), done.
+google3976513_student@cloudshell:~ (qwiklabs-gcp-8dede7b966550313)$
+
+cd appengine-guestbook-python
+google3976513_student@cloudshell:~ (qwiklabs-gcp-8dede7b966550313)$ cd appengine-guestbook-python/
+google3976513_student@cloudshell:~/appengine-guestbook-python (qwiklabs-gcp-8dede7b966550313)$
+ls -l
+google3976513_student@cloudshell:~/appengine-guestbook-python (qwiklabs-gcp-8dede7b966550313)$ ls -l
+total 60
+-rw-r--r-- 1 google3976513_student google3976513_student   365 Jun 30 16:17 app.yaml
+drwxr-xr-x 5 google3976513_student google3976513_student  4096 Jun 30 16:17 bootstrap
+-rw-r--r-- 1 google3976513_student google3976513_student  3046 Jun 30 16:17 CONTRIB.md
+drwxr-xr-x 2 google3976513_student google3976513_student  4096 Jun 30 16:17 e2e
+-rw-r--r-- 1 google3976513_student google3976513_student  8348 Jun 30 16:17 favicon.ico
+-rw-r--r-- 1 google3976513_student google3976513_student  3969 Jun 30 16:17 guestbook.py
+-rw-r--r-- 1 google3976513_student google3976513_student  2539 Jun 30 16:17 index.html
+-rw-r--r-- 1 google3976513_student google3976513_student    91 Jun 30 16:17 index.yaml
+-rw-r--r-- 1 google3976513_student google3976513_student 11358 Jun 30 16:17 LICENSE
+-rw-r--r-- 1 google3976513_student google3976513_student   888 Jun 30 16:17 Makefile
+-rw-r--r-- 1 google3976513_student google3976513_student  1243 Jun 30 16:17 README.md
+google3976513_student@cloudshell:~/appengine-guestbook-python (qwiklabs-gcp-8dede7b966550313)$
+
+cat app.yaml
+
+
+## GCP Fundamentals: Getting Started with Deployment Manager and Stackdriver
+https://googlecoursera.qwiklabs.com/focuses/17387
+$DEVSHELL_PROJECT_ID: qwiklabs-gcp-053db8a01d4b8079
+export MY_ZONE=us-central1-a
+
+gsutil cp gs://cloud-training/gcpfcoreinfra/mydeploy.yaml mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ gsutil cp gs://cloud-training/gcpfcoreinfra/mydeploy.yaml mydeploy.yaml
+Copying gs://cloud-training/gcpfcoreinfra/mydeploy.yaml...
+/ [1 files][  664.0 B/  664.0 B]
+Operation completed over 1 objects/664.0 B.
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$
+
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ cat mydeploy.yaml
+resources:
+- name: my-vm
+  type: compute.v1.instance
+  properties:
+    zone: ZONE
+    machineType: zones/ZONE/machineTypes/n1-standard-1
+    metadata:
+      items:
+      - key: startup-script
+        value: "apt-get update"
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180806
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/PROJECT_ID/global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$
+
+sed -i -e 's/PROJECT_ID/'$DEVSHELL_PROJECT_ID/ mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ sed -i -e 's/PROJECT_ID/'$DEVSHELL_PROJECT_ID/ mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$
+
+sed -i -e 's/ZONE/'$MY_ZONE/ mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ sed -i -e 's/ZONE/'$MY_ZONE/ mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ cat mydeploy.yaml 
+resources:
+- name: my-vm
+  type: compute.v1.instance
+  properties:
+    zone: us-central1-a
+    machineType: zones/us-central1-a/machineTypes/n1-standard-1
+    metadata:
+      items:
+      - key: startup-script
+        value: "apt-get update"
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180806
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-053db8a01d4b8079/global/networks/default
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$
+
+gcloud deployment-manager deployments create my-first-depl --config mydeploy.yaml
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$ gcloud deployment-manager deployments create my-first-depl --config mydeploy.yaml
+The fingerprint of the deployment is PLWiNOlxAD-X3uturKABTg==
+Waiting for create [operation-1561901846970-58c8a9cc34266-f7d363bb-ff3258fd]...done.
+WARNING: Create operation operation-1561901846970-58c8a9cc34266-f7d363bb-ff3258fd completed with warnings:
+---
+code: EXTERNAL_API_WARNING
+data:
+- key: resource_name
+  value: projects/debian-cloud/global/images/debian-9-stretch-v20180806
+- key: replacement_suggestion
+  value: A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20180814'.
+message: The resource 'projects/debian-cloud/global/images/debian-9-stretch-v20180806'
+  is deprecated. A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20180814'.
+
+NAME   TYPE                 STATE      ERRORS  INTENT
+my-vm  compute.v1.instance  COMPLETED  []
+google3980161_student@cloudshell:~ (qwiklabs-gcp-053db8a01d4b8079)$
+
+Task 4: Update a Deployment Manager deployment
+nano mydeploy.yaml
+      value: "apt-get update; apt-get install nginx-light -y"
+
+
+gcloud deployment-manager deployments update my-first-depl --config mydeploy.yaml
+
+
+Task 5: View the Load on a VM using Stackdriver
+
+dd if=/dev/urandom | gzip -9 >> /dev/null &
+
+google3980161_student@my-vm:~$ dd if=/dev/urandom | gzip -9 >> /dev/null &
+[1] 1563
+google3980161_student@my-vm:~$ 
+
+curl -sSO https://dl.google.com/cloudagents/install-monitoring-agent.sh
+sudo bash install-monitoring-agent.sh
+
+curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
+sudo bash install-logging-agent.sh
+google3980161_student@my-vm:~$ curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
+google3980161_student@my-vm:~$ sudo bash install-logging-agent.sh
+==============================================================================
+Starting installation of google-fluentd
+==============================================================================
+
+Installing agents for Debian or Ubuntu.
+OK
+Selecting previously unselected package google-fluentd.
+(Reading database ... 33705 files and directories currently installed.)
+Preparing to unpack .../google-fluentd_1.6.13-1_amd64.deb ...
+Unpacking google-fluentd (1.6.13-1) ...
+Selecting previously unselected package google-fluentd-catch-all-config.
+Preparing to unpack .../google-fluentd-catch-all-config_0.7_all.deb ...
+Unpacking google-fluentd-catch-all-config (0.7) ...
+Setting up google-fluentd (1.6.13-1) ...
+Adding system user `google-fluentd' (UID 108) ...
+Adding new group `google-fluentd' (GID 112) ...
+Adding new user `google-fluentd' (UID 108) with group `google-fluentd' ...
+Not creating home directory `/home/google-fluentd'.
+Installing default conffile /etc/google-fluentd/google-fluentd.conf ...
+Setting up google-fluentd-catch-all-config (0.7) ...
+
+==============================================================================
+Installation of google-fluentd complete.
+
+Logs from this machine should be visible in the log viewer at:
+  https://console.cloud.google.com/logs/viewer?project=qwiklabs-gcp-053db8a01d4b8079&resource=gce_instance/instance_id/4967059672066754033
+
+A test message has been sent to syslog to help verify proper operation.
+
+Please consult the documentation for troubleshooting advice:
+  https://cloud.google.com/logging/docs/agent
+
+You can monitor the logging agent's logfile at:
+  /var/log/google-fluentd/google-fluentd.log
+==============================================================================
+google3980161_student@my-vm:~$ 
+
+
+
+
+
+
+
+
+## GCP Fundamentals: Getting Started with BigQuery
+https://googlecoursera.qwiklabs.com/focuses/17388
+
+
+select int64_field_6 as hour, count(*) as hitcount from logdata.accesslog
+group by hour
+order by hour

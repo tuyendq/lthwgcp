@@ -1,0 +1,43 @@
+
+## Console and Cloud Shell v1.5
+https://googlecoursera.qwiklabs.com/focuses/21476
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-65d5ff1930ad86f8.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ gsutil mb gs://ipractice2
+Creating gs://ipractice2/...
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ ls
+A Liberal Education.txt  README-cloudshell.txt
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ gsutl cp A\ Liberal\ Education.txt gs://ipractice2/
+-bash: gsutl: command not found
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ gsutil cp A\ Liberal\ Education.txt gs://ipractice2/
+Copying file://A Liberal Education.txt [Content-Type=text/plain]...
+- [1 files][  1.7 KiB/  1.7 KiB]
+Operation completed over 1 objects/1.7 KiB.
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ gcloud compute regions list
+NAME                     CPUS  DISKS_GB  ADDRESSES  RESERVED_ADDRESSES  STATUS  TURNDOWN_DATE
+asia-east1               0/24  0/4096    0/8        0/8                 UP
+asia-east2               0/24  0/4096    0/8        0/8                 UP
+asia-northeast1          0/24  0/4096    0/8        0/8                 UP
+asia-northeast2          0/24  0/4096    0/8        0/8                 UP
+asia-south1              0/24  0/4096    0/8        0/8                 UP
+asia-southeast1          0/24  0/4096    0/8        0/8                 UP
+australia-southeast1     0/24  0/4096    0/8        0/8                 UP
+europe-north1            0/24  0/4096    0/8        0/8                 UP
+europe-west1             0/24  0/4096    0/8        0/8                 UP
+europe-west2             0/24  0/4096    0/8        0/8                 UP
+europe-west3             0/24  0/4096    0/8        0/8                 UP
+europe-west4             0/24  0/4096    0/8        0/8                 UP
+europe-west6             0/24  0/4096    0/8        0/8                 UP
+northamerica-northeast1  0/24  0/4096    0/8        0/8                 UP
+southamerica-east1       0/24  0/4096    0/8        0/8                 UP
+us-central1              0/24  0/4096    0/8        0/8                 UP
+us-east1                 0/24  0/4096    0/8        0/8                 UP
+us-east4                 0/24  0/4096    0/8        0/8                 UP
+us-west1                 0/24  0/4096    0/8        0/8                 UP
+us-west2                 0/24  0/4096    0/8        0/8                 UP
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$ gcloud compute regions list | wc -l
+21
+google3967213_student@cloudshell:~ (qwiklabs-gcp-65d5ff1930ad86f8)$
+

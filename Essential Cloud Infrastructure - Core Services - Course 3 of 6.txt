@@ -1,0 +1,595 @@
+# Essential Cloud Infrastructure: Core Services
+
+## Module 1: Cloud IAM
+## Module 2: Data Storage Services
+## Module 3: Resource Management
+## Module 4: Resource Monitoring
+
+## Lab: Cloud IAM v1.5
+https://googlecoursera.qwiklabs.com/focuses/21483
+Project ID: qwiklabs-gcp-972aa5fe590910b3
+
+## Lab: Cloud Storage v1.5
+https://googlecoursera.qwiklabs.com/focuses/21481
+Project ID 1: qwiklabs-gcp-31db5a759e040149
+Project ID 2: qwiklabs-gcp-9f23a745ed88cff9
+
+export BUCKET_NAME_1=ipractice11
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-31db5a759e040149.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ export BUCKET_NAME_1=ipractice11
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ curl \
+> http://hadoop.apache.org/docs/current/\
+> hadoop-project-dist/hadoop-common/\
+> ClusterSetup.html > setup.html
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 56529  100 56529    0     0  31427      0  0:00:01  0:00:01 --:--:-- 31422
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ cp setup.html setup2.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ cp setup.html setup3.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp setup.html gs://$BUCKET_NAME_1
+Copying file://setup.html [Content-Type=text/html]...
+- [1 files][ 55.2 KiB/ 55.2 KiB]
+Operation completed over 1 objects/55.2 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl get gs://$BUCKET_NAME_1/setup.html
+[
+  {
+    "entity": "project-owners-37656112730",
+    "projectTeam": {
+      "projectNumber": "37656112730",
+      "team": "owners"
+    },
+    "role": "OWNER"
+  },
+  {
+    "entity": "project-editors-37656112730",
+    "projectTeam": {
+      "projectNumber": "37656112730",
+      "team": "editors"
+    },
+    "role": "OWNER"
+  },
+  {
+    "entity": "project-viewers-37656112730",
+    "projectTeam": {
+      "projectNumber": "37656112730",
+      "team": "viewers"
+    },
+    "role": "READER"
+  },
+  {
+    "email": "google3998522_student@qwiklabs.net",
+    "entity": "user-google3998522_student@qwiklabs.net",
+    "role": "OWNER"
+  }
+]
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl get gs://$BUCKET_NAME_1/setup.html > acl.txt
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl set private gs://$BUCKET_NAME_1/setup.html
+Setting ACL on gs://ipractice11/setup.html...
+/ [1 objects]
+Operation completed over 1 objects.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl get gs://$BUCKET_NAME_1/setup.html > acl2.txt
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ cat acl2.txt
+[
+  {
+    "email": "google3998522_student@qwiklabs.net",
+    "entity": "user-google3998522_student@qwiklabs.net",
+    "role": "OWNER"
+  }
+]
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME_1/setup.html
+Updated ACL on gs://ipractice11/setup.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl get gs://$BUCKET_NAME_1/setup.html
+[
+  {
+    "email": "google3998522_student@qwiklabs.net",
+    "entity": "user-google3998522_student@qwiklabs.net",
+    "role": "OWNER"
+  },
+  {
+    "entity": "allUsers",
+    "role": "READER"
+  }
+]
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil acl get gs://$BUCKET_NAME_1/setup.html > acl3.txt
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ rm setup.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ ls
+acl2.txt  acl3.txt  acl.txt  README-cloudshell.txt  setup2.html  setup3.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp gs://$BUCKET_NAME_1/setup.html setup.html
+Copying gs://ipractice11/setup.html...
+- [1 files][ 55.2 KiB/ 55.2 KiB]
+Operation completed over 1 objects/55.2 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ python -c 'import base64; import os;
+> print(base64.encodestring(os.urandom(32)))'
+09A+sB67ksOpH/nssLXiyfavLS/u5xkz7R1W9IpaeFc=
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil config -n
+This command will create a boto config file at
+/home/google3998522_student/.boto containing your credentials, based
+on your responses to the following questions.
+
+Boto config file "/home/google3998522_student/.boto" created. If you
+need to use a proxy to access the Internet please see the instructions
+in that file.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp setup2.html gs://$BUCKET_NAME_1/
+Copying file://setup2.html [Content-Type=text/html]...
+- [1 files][ 55.2 KiB/ 55.2 KiB]
+Operation completed over 1 objects/55.2 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp setup3.html gs://$BUCKET_NAME_1/
+Copying file://setup3.html [Content-Type=text/html]...
+- [1 files][ 55.2 KiB/ 55.2 KiB]
+Operation completed over 1 objects/55.2 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp gs://$BUCKET_NAME_1/setup* ./
+Copying gs://ipractice11/setup.html...
+Copying gs://ipractice11/setup2.html...
+Copying gs://ipractice11/setup3.html...
+\ [3 files][165.6 KiB/165.6 KiB]
+Operation completed over 3 objects/165.6 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ python -c 'import base64; import os;
+> print(base64.encodestring(os.urandom(32)))'
+1yxxsXoT+Ch7RhaV2qs6mwkVVFgqIJbOUrU1bK74FD8=
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil lifecycle get gs://$BUCKET_NAME_1
+gs://ipractice11/ has no lifecycle configuration.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ vim life.json
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil lifecycle set life.json gs://$BUCKET_NAME_1
+Setting lifecycle configuration on gs://ipractice11/...
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil versioning get gs://$BUCKET_NAME_1
+gs://ipractice11: Suspended
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil versioning set on gs://$BUCKET_NAME_1
+Enabling versioning for gs://ipractice11/...
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil versioning get gs://$BUCKET_NAME_1
+gs://ipractice11: Enabled
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ ls -la setup.html
+-rw-r--r-- 1 google3998522_student google3998522_student 56529 Jul  1 22:06 setup.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ vim setup.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp -v setup.html gs://$BUCKET_NAME_1
+Copying file://setup.html [Content-Type=text/html]...
+Created: gs://ipractice11/setup.html#1561994804268851
+
+Operation completed over 1 objects/55.1 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ vim setup.html
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil cp -v setup.html gs://$BUCKET_NAME_1
+Copying file://setup.html [Content-Type=text/html]...
+Created: gs://ipractice11/setup.html#1561994911371898
+
+Operation completed over 1 objects/54.5 KiB.
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$ gsutil ls -a gs://$BUCKET_NAME_1/setup.html
+gs://ipractice11/setup.html#1561992484005360
+gs://ipractice11/setup.html#1561994804268851
+gs://ipractice11/setup.html#1561994911371898
+google3998522_student@cloudshell:~ (qwiklabs-gcp-31db5a759e040149)$
+
+export VERSION_NAME=gs://ipractice11/setup.html#1561992484005360
+
+
+
+
+## Lab: Cloud SQL v1.5
+https://googlecoursera.qwiklabs.com/focuses/21482
+Project ID: qwiklabs-gcp-ef7fcd1a18ee4325
+
+VM: mydb-client 35.188.94.120
+gcloud compute --project=qwiklabs-gcp-ef7fcd1a18ee4325 instances create mydb-client --zone=us-central1-a --machine-type=n1-standard-1 --subnet=default --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=458681070480-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=mydb-client
+
+
+export IP_ADDRESS_SQL=35.193.50.87
+mysql --host=$IP_ADDRESS_SQL -u root -p
+
+google4006109_student@mydb-client:~$ export IP_ADDRESS_SQL=35.193.50.87
+google4006109_student@mydb-client:~$ mysql --host=$IP_ADDRESS_SQL -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 5.7.14-google-log (Google)
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> 
+MySQL [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+MySQL [(none)]> 
+
+MySQL [(none)]> exit
+Bye
+google4006109_student@mydb-client:~$ curl -O https://storage.googleapis.com/cloud-training/archinfra/Example-biling-export.csv
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   212  100   212    0     0   2693      0 --:--:-- --:--:-- --:--:--  2717
+google4006109_student@mydb-client:~$ 
+
+google4006109_student@mydb-client:~$ mysql --host=$IP_ADDRESS_SQL -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 42
+Server version: 5.7.14-google-log (Google)
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [(none)]> create database resources;
+Query OK, 1 row affected (0.01 sec)
+
+MySQL [(none)]> use resources;
+Database changed
+MySQL [resources]>  
+
+MySQL [resources]> CREATE TABLE biling                                                                             
+    -> (
+    -> Account_ID varchar(255),
+    -> Line_Item varchar(255),
+    -> Start_Time varchar(255),
+    -> End_Time varchar(255),
+    -> Project varchar(255,
+    -> Measurement1 varchar(255),
+    -> Measurement1_Units varchar(255),
+    -> Cost varchar(255),
+    -> Currency int,
+    -> Proect_Number varchar(255),
+    -> Project_ID varchar(255),
+    -> Project_Name varchar(255),
+    -> Project_Labels varchar(255),
+    -> Description varchar(255),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '
+Measurement1 varchar(255),
+Measurement1_Units varchar(255),
+Cost varchar(255),
+' at line 7
+MySQL [resources]> CREATE TABLE biling ( Account_ID varchar(255), Line_Item varchar(255), Start_Time varchar(255), End_Time varchar(255), Project varchar(255), Measurement1 varchar(255), Measurement1_Units varchar(255), Cost varchar(255), Currency int, Project_Number varchar(255), Project_ID varchar(255), Project_Name varchar(255), Project_Labels varchar(255), Description varchar(255));
+Query OK, 0 rows affected (0.02 sec)
+                                                                                                                   
+MySQL [resources]>   
+
+MySQL [resources]> show tables;                                                                                    
++---------------------+
+| Tables_in_resources |
++---------------------+
+| biling              |
++---------------------+
+1 row in set (0.00 sec)
+                                                                                                                   
+MySQL [resources]> describe biling;                                                                                
++--------------------+--------------+------+-----+---------+-------+
+| Field              | Type         | Null | Key | Default | Extra |
++--------------------+--------------+------+-----+---------+-------+
+| Account_ID         | varchar(255) | YES  |     | NULL    |       |
+| Line_Item          | varchar(255) | YES  |     | NULL    |       |
+| Start_Time         | varchar(255) | YES  |     | NULL    |       |
+| End_Time           | varchar(255) | YES  |     | NULL    |       |
+| Project            | varchar(255) | YES  |     | NULL    |       |
+| Measurement1       | varchar(255) | YES  |     | NULL    |       |
+| Measurement1_Units | varchar(255) | YES  |     | NULL    |       |
+| Cost               | varchar(255) | YES  |     | NULL    |       |
+| Currency           | int(11)      | YES  |     | NULL    |       |
+| Project_Number     | varchar(255) | YES  |     | NULL    |       |
+| Project_ID         | varchar(255) | YES  |     | NULL    |       |
+| Project_Name       | varchar(255) | YES  |     | NULL    |       |
+| Project_Labels     | varchar(255) | YES  |     | NULL    |       |
+| Description        | varchar(255) | YES  |     | NULL    |       |
++--------------------+--------------+------+-----+---------+-------+
+14 rows in set (0.01 sec)
+                                                                                                                   
+MySQL [resources]>       
+MySQL [resources]> exit                                                                                            
+Bye
+google4006109_student@mydb-client:~$
+
+google4006109_student@mydb-client:~$ mv Example-biling-export.csv biling.csv                                       
+google4006109_student@mydb-client:~$ ls
+biling.csv
+google4006109_student@mydb-client:~$ mysqlimport --host=$IP_ADDRESS_SQL --ignore-lines=1 --fields-terminated-by=, r
+esources --verbose --local -u root -p biling.csv 
+Enter password: 
+Connecting to 35.193.50.87
+Selecting database resources
+Loading data from LOCAL file: /home/google4006109_student/biling.csv into biling
+resources.biling: Records: 0  Deleted: 0  Skipped: 0  Warnings: 0
+Disconnecting from 35.193.50.87
+google4006109_student@mydb-client:~$ 
+
+
+google4006109_student@mydb-client:~$ ls -l                                                                         
+total 28
+-rw-r--r-- 1 google4006109_student nogroup 14475 Jul  2 03:58 biling.csv
+-rw-r--r-- 1 google4006109_student nogroup  1248 Jul  2 04:04 client-cert.pem
+-rw-r--r-- 1 google4006109_student nogroup  1674 Jul  2 04:04 client-key.pem
+-rw-r--r-- 1 google4006109_student nogroup  1272 Jul  2 04:05 server-ca.pem
+google4006109_student@mydb-client:~$ 
+
+google4006109_student@mydb-client:~$ mysql -uroot -p -h $IP_ADDRESS_SQL \
+> --ssl-ca=server-ca.pem \
+> --ssl-cert=client-cert.pem \
+> --ssl-key=client-key.pem 
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 172                                                                                    
+Server version: 5.7.14-google-log (Google)                                                                         
+                                                                                                                   
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.                                               
+                                                                                                                   
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.                                     
+                                                                                                                   
+MySQL [(none)]>  
+
+MySQL [(none)]> show databases;                                                                                    
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| resources          |
+| sys                |
++--------------------+
+5 rows in set (0.01 sec)
+                                                                                                                   
+MySQL [(none)]>    
+
+
+SQL: infra-db
+root/gcp2019
+
+
+## Lab: Cloud Datastore v1.5
+https://googlecoursera.qwiklabs.com/focuses/21484
+Project ID: qwiklabs-gcp-fb9c8380ab726205
+
+
+
+## Lab: Examining Billing data with BigQuery v1.5
+https://googlecoursera.qwiklabs.com/focuses/21541
+Project ID: qwiklabs-gcp-02e9e1aba88e4077
+
+SELECT * FROM `imported_billing_data.sampleinfotable`
+WHERE Cost > 0
+
+
+## Lab: Resource Monitoring (Stackdriver) v1.5
+https://googlecoursera.qwiklabs.com/focuses/21478
+Project ID: qwiklabs-gcp-63ed69d7d450d9c6
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-63ed69d7d450d9c6.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$ for i in {1..3}; \
+> do \
+> gcloud compute instances create "nginxstack-$i" \
+> --machine-type "f1-micro" \
+> --tags nginxstack-tcp-443,nginxstack-tcp-80 \
+> --zone us-central1-f \
+> --image "https://www.googleapis.com/compute/v1/projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-0-4-linux-debian-9-x86-64" \
+> --boot-disk-size "200" --boot-disk-type "pd-standard" \
+> --boot-disk-device-name "nginxstack-$i"; \
+> done
+
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-63ed69d7d450d9c6/zones/us-central1-f/instances/nginxstack-1].
+WARNING: Some requests generated warnings:
+ - Disk size: '200 GB' is larger than image size: '10 GB'. You might need to resize the root repartition manually if the operating system does not support automatic resizing. See https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd for details.
+ - The resource 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-0-4-linux-debian-9-x86-64' is deprecated. A suggested replacement is 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-2-4-linux-debian-9-x86-64'.
+
+NAME          ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+nginxstack-1  us-central1-f  f1-micro                   10.128.0.2   35.232.114.215  RUNNING
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-63ed69d7d450d9c6/zones/us-central1-f/instances/nginxstack-2].
+WARNING: Some requests generated warnings:
+ - Disk size: '200 GB' is larger than image size: '10 GB'. You might need to resize the root repartition manually if the operating system does not support automatic resizing. See https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd for details.
+ - The resource 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-0-4-linux-debian-9-x86-64' is deprecated. A suggested replacement is 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-2-4-linux-debian-9-x86-64'.
+
+NAME          ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP  STATUS
+nginxstack-2  us-central1-f  f1-micro                   10.128.0.3   34.67.75.96  RUNNING
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-63ed69d7d450d9c6/zones/us-central1-f/instances/nginxstack-3].
+WARNING: Some requests generated warnings:
+ - Disk size: '200 GB' is larger than image size: '10 GB'. You might need to resize the root repartition manually if the operating system does not support automatic resizing. See https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd for details.
+ - The resource 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-0-4-linux-debian-9-x86-64' is deprecated. A suggested replacement is 'projects/bitnami-launchpad/global/images/bitnami-nginx-1-14-2-4-linux-debian-9-x86-64'.
+
+NAME          ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+nginxstack-3  us-central1-f  f1-micro                   10.128.0.4   35.224.103.121  RUNNING
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$
+
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$ gcloud compute firewall-rules create nginx-firewall \
+> --allow tcp:443,tcp:80 \
+> --target-tags nginxstack-tcp-80,nginxstack-tcp-443
+Creating firewall...?Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-63ed69d7d450d9c6/global/firewalls/nginx-firewall].
+Creating firewall...done.
+NAME            NETWORK  DIRECTION  PRIORITY  ALLOW           DENY  DISABLED
+nginx-firewall  default  INGRESS    1000      tcp:443,tcp:80        False
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$
+
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$ gcloud compute instances list
+NAME          ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+nginxstack-1  us-central1-f  f1-micro                   10.128.0.2   35.232.114.215  RUNNING
+nginxstack-2  us-central1-f  f1-micro                   10.128.0.3   34.67.75.96     RUNNING
+nginxstack-3  us-central1-f  f1-micro                   10.128.0.4   35.224.103.121  RUNNING
+google4011274_student@cloudshell:~ (qwiklabs-gcp-63ed69d7d450d9c6)$
+
+## Lab: Error Reporting and Debugging (Stackdriver) v1.5
+https://googlecoursera.qwiklabs.com/focuses/21480
+Project ID: qwiklabs-gcp-2474f4f2a6dfa1ad
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-2474f4f2a6dfa1ad.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google4012136_student@cloudshell:~ (qwiklabs-gcp-2474f4f2a6dfa1ad)$ mkdir -v appengine-hello
+mkdir: created directory 'appengine-hello'
+google4012136_student@cloudshell:~ (qwiklabs-gcp-2474f4f2a6dfa1ad)$ cd $_
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ gsutil cp gs://cloud-training/archinfra/gae-hello/* .
+Copying gs://cloud-training/archinfra/gae-hello/app.yaml...
+Copying gs://cloud-training/archinfra/gae-hello/main.py...
+Copying gs://cloud-training/archinfra/gae-hello/main.pyc...
+Copying gs://cloud-training/archinfra/gae-hello/main_test.py...
+- [4 files][  2.5 KiB/  2.5 KiB]
+Operation completed over 4 objects/2.5 KiB.
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$
+
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ dev_appserver.py $(pwd)
+INFO     2019-07-02 11:02:12,394 devappserver2.py:224] Using Cloud Datastore Emulator.
+We are gradually rolling out the emulator as the default datastore implementation of dev_appserver.
+If broken, you can temporarily disable it by --support_datastore_emulator=False
+Read the documentation: https://cloud.google.com/appengine/docs/standard/python/tools/migrate-cloud-datastore-emulator
+Help us validate that the feature is ready by taking this survey: https://goo.gl/forms/UArIcs8K9CUSCm733
+Report issues at: https://issuetracker.google.com/issues/new?component=187272
+
+INFO     2019-07-02 11:02:12,471 devappserver2.py:278] Skipping SDK update check.
+INFO     2019-07-02 11:02:12,707 datastore_emulator.py:155] Starting Cloud Datastore emulator at: http://localhost:21304
+WARNING  2019-07-02 11:02:13,316 simple_search_stub.py:1196] Could not read search indexes from /tmp/appengine.None.google4012136_student/search_indexes
+INFO     2019-07-02 11:02:21,484 datastore_emulator.py:161] Cloud Datastore emulator responded after 8.776852 seconds
+INFO     2019-07-02 11:02:21,486 api_server.py:275] Starting API server at: http://0.0.0.0:32847
+E0702 11:02:21.508844139     535 server_chttp2.cc:40]        {"created":"@1562065341.508810210","description":"Only 1 addresses added out of total 2 resolved","file":"src/core/ext/transport/chttp2/server/chttp2_server.cc","file_line":357,"referenced_errors":[{"created":"@1562065341.508803065","description":"Address family not supported by protocol","errno":97,"file":"src/core/lib/iomgr/socket_utils_common_posix.cc","file_line":383,"os_error":"Address family not supported by protocol","syscall":"socket","target_address":"[::1]:42687"}]}
+INFO     2019-07-02 11:02:21,509 api_server.py:265] Starting gRPC API server at: http://localhost:42687
+INFO     2019-07-02 11:02:21,530 dispatcher.py:256] Starting module "default" running at: http://0.0.0.0:8080
+INFO     2019-07-02 11:02:21,532 admin_server.py:150] Starting admin server at: http://0.0.0.0:8000
+INFO     2019-07-02 11:02:25,560 instance.py:294] Instance PID: 578
+INFO     2019-07-02 11:03:13,186 module.py:861] default: "GET /?authuser=0 HTTP/1.1" 200 13
+INFO     2019-07-02 11:03:13,895 module.py:861] default: "GET /favicon.ico HTTP/1.1" 404 154
+^CException in thread WSGI select:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/usr/lib/python2.7/threading.py", line 754, in run
+    self.__target(*self.__args, **self.__kwargs)
+  File "/google/google-cloud-sdk/platform/google_appengine/google/appengine/tools/devappserver2/wsgi_server.py", line 166, in _loop_forever
+    self._select()
+  File "/google/google-cloud-sdk/platform/google_appengine/google/appengine/tools/devappserver2/wsgi_server.py", line 183, in _select
+    _READINESS_TIMEOUT_SECONDS * _SECONDS_TO_MILLISECONDS)]
+error: (4, 'Interrupted system call')
+
+INFO     2019-07-02 11:03:51,621 datastore_emulator.py:187] shutting down the emulator running at http://localhost:21304
+INFO     2019-07-02 11:03:52,328 stub_util.py:357] Applying all pending transactions and saving the datastore
+INFO     2019-07-02 11:03:52,330 stub_util.py:360] Saving search indexes
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$
+
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ gcloud app deploy app.yaml
+You are creating an app for project [qwiklabs-gcp-2474f4f2a6dfa1ad].
+WARNING: Creating an App Engine application for a project is irreversible and the region
+cannot be changed. More information about regions is at
+<https://cloud.google.com/appengine/docs/locations>.
+
+Please choose the region where you want your App Engine application
+located:
+
+ [1] asia-east2    (supports standard and flexible)
+ [2] asia-northeast1 (supports standard and flexible)
+ [3] asia-northeast2 (supports standard and flexible)
+ [4] asia-south1   (supports standard and flexible)
+ [5] australia-southeast1 (supports standard and flexible)
+ [6] europe-west   (supports standard and flexible)
+ [7] europe-west2  (supports standard and flexible)
+ [8] europe-west3  (supports standard and flexible)
+ [9] europe-west6  (supports standard and flexible)
+ [10] northamerica-northeast1 (supports standard and flexible)
+ [11] southamerica-east1 (supports standard and flexible)
+ [12] us-central    (supports standard and flexible)
+ [13] us-east1      (supports standard and flexible)
+ [14] us-east4      (supports standard and flexible)
+ [15] us-west2      (supports standard and flexible)
+ [16] cancel
+Please enter your numeric choice:  1
+
+Creating App Engine application in project [qwiklabs-gcp-2474f4f2a6dfa1ad] and region [asia-east2]....done.
+Services to deploy:
+
+descriptor:      [/home/google4012136_student/appengine-hello/app.yaml]
+source:          [/home/google4012136_student/appengine-hello]
+target project:  [qwiklabs-gcp-2474f4f2a6dfa1ad]
+target service:  [default]
+target version:  [20190702t180524]
+target url:      [https://qwiklabs-gcp-2474f4f2a6dfa1ad.appspot.com]
+
+
+Do you want to continue (Y/n)?  y
+
+Beginning deployment of service [default]...
++------------------------------------------------------------+
+¦- Uploading 4 files to Google Cloud Storage                -¦
++------------------------------------------------------------+
+File upload done.
+Updating service [default]...done.
+Setting traffic split for service [default]...done.
+Deployed service [default] to [https://qwiklabs-gcp-2474f4f2a6dfa1ad.appspot.com]
+
+You can stream logs from the command line by running:
+  $ gcloud app logs tail -s default
+
+To view your application in the web browser run:
+  $ gcloud app browse
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$
+
+
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ gcloud app browse
+Did not detect your browser. Go to this link to view your app:
+https://qwiklabs-gcp-2474f4f2a6dfa1ad.appspot.com
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$
+
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ sed -i -e 's/webapp2/webapp22/' main.py
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$ gcloud app deploy app.yaml --quiet
+Services to deploy:
+
+descriptor:      [/home/google4012136_student/appengine-hello/app.yaml]
+source:          [/home/google4012136_student/appengine-hello]
+target project:  [qwiklabs-gcp-2474f4f2a6dfa1ad]
+target service:  [default]
+target version:  [20190702t181102]
+target url:      [https://qwiklabs-gcp-2474f4f2a6dfa1ad.appspot.com]
+
+
+Beginning deployment of service [default]...
++------------------------------------------------------------+
+¦- Uploading 1 file to Google Cloud Storage                 -¦
++------------------------------------------------------------+
+File upload done.
+Updating service [default]...done.
+Setting traffic split for service [default]...done.
+Deployed service [default] to [https://qwiklabs-gcp-2474f4f2a6dfa1ad.appspot.com]
+
+You can stream logs from the command line by running:
+  $ gcloud app logs tail -s default
+
+To view your application in the web browser run:
+  $ gcloud app browse
+google4012136_student@cloudshell:~/appengine-hello (qwiklabs-gcp-2474f4f2a6dfa1ad)$
+
+
+
+
+
+
