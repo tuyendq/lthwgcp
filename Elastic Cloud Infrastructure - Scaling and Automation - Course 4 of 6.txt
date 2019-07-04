@@ -2,8 +2,889 @@
 
 ## Lab: Virtual Private Networks (VPN) v1.5
 https://googlecoursera.qwiklabs.com/focuses/21490
-Project ID: 
+Project ID: qwiklabs-gcp-726173b5b39be503
+Duration: 120min
+
+### Create the first network
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks create vpn-network-1 --description="1st custom VPC network" --subnet-mode=custom
+
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks subnets create subnet-a --description="Custom subnet 10.5.4.0/24" --network=vpn-network-1 --region=us-central1 --range=10.5.4.0/24
+
+
+### Create the second network
+
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks create vpn-network-2 --description="2nd custom VPC network" --subnet-mode=custom
+
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks subnets create subnet-b --description="Custom subnet 10.1.3.0/24" --network=vpn-network-2 --region=europe-west1 --range=10.1.3.0/24
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-726173b5b39be503.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks create vpn-network-2 --description="2nd custom VPC network" --subnet-mode=custom
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/global/networks/vpn-network-2].
+NAME           SUBNET_MODE  BGP_ROUTING_MODE  IPV4_RANGE  GATEWAY_IPV4
+vpn-network-2  CUSTOM       REGIONAL
+
+Instances on this network will not be reachable until firewall rules
+are created. As an example, you can allow all internal traffic between
+instances as well as SSH, RDP, and ICMP by running:
+
+$ gcloud compute firewall-rules create <FIREWALL_NAME> --network vpn-network-2 --allow tcp,udp,icmp --source-ranges <IP_RANGE>
+$ gcloud compute firewall-rules create <FIREWALL_NAME> --network vpn-network-2 --allow tcp:22,tcp:3389,icmp
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute --project=qwiklabs-gcp-726173b5b39be503 networks subnets create subnet-b --description="Custom subnet 10.1.3.0/24" --network=vpn-network-2 --region=europe-west1 --range=10.1.3.0/24
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/subnetworks/subnet-b].
+NAME      REGION        NETWORK        RANGE
+subnet-b  europe-west1  vpn-network-2  10.1.3.0/24
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Create the 1st instance VM utility
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 instances create server-1 --zone=us-central1-b --machine-type=f1-micro --subnet=subnet-a --network-tier=PREMIUM --maintenance-policy=MIGRATE --service-account=904495569054-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=server-1
+
+### Create the 2nd instance VM utility
+gcloud compute instances create server-2 --zone=europe-west1-b --machine-type=f1-micro --subnet=subnet-b --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=server-2
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute instances create server-2 --zone=europe-west1-b --machine-type=f1-micro --subnet=subnet-b --image=debian-9-stretch-v20190618 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=server-2
+WARNING: You have selected a disk size of under [200GB]. This may result in poor I/O performance. For more information, see: https://developers.google.com/compute/docs/disks#performance.
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/zones/europe-west1-b/instances/server-2].
+NAME      ZONE            MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP    STATUS
+server-2  europe-west1-b  f1-micro                   10.1.3.2     104.199.28.56  RUNNING
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute instances list
+NAME      ZONE            MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+server-2  europe-west1-b  f1-micro                   10.1.3.2     104.199.28.56   RUNNING
+server-1  us-central1-b   f1-micro                   10.5.4.2     35.192.125.121  RUNNING
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+
+### Create firewall rule
+
+gcloud compute --project=qwiklabs-gcp-726173b5b39be503 firewall-rules create allow-icmp-ssh-network-1 --direction=INGRESS --priority=1000 --network=vpn-network-1 --action=ALLOW --rules=tcp:22,icmp --source-ranges=0.0.0.0/0
+
+gcloud compute firewall-rules create allow-icmp-ssh-network-2 --direction=INGRESS --priority=1000 --network=vpn-network-2 --action=ALLOW --rules=tcp:22,icmp --source-ranges=0.0.0.0/0
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute firewall-rules create allow-icmp-ssh-network-2 --direction=INGRESS --priority=1000 --network=vpn-network-2 --action=ALLOW --rules=tcp:22,icmp --source-ranges=0.0.0.0/0
+Creating firewall...?Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/global/firewalls/allow-icmp-ssh-network-2].
+Creating firewall...done.
+NAME                      NETWORK        DIRECTION  PRIORITY  ALLOW        DENY  DISABLED
+allow-icmp-ssh-network-2  vpn-network-2  INGRESS    1000      tcp:22,icmp        False
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute firewall-rules list
+NAME                      NETWORK        DIRECTION  PRIORITY  ALLOW                         DENY  DISABLED
+allow-icmp-ssh-network-1  vpn-network-1  INGRESS    1000      tcp:22,icmp                         False
+allow-icmp-ssh-network-2  vpn-network-2  INGRESS    1000      tcp:22,icmp                         False
+default-allow-icmp        default        INGRESS    65534     icmp                                False
+default-allow-internal    default        INGRESS    65534     tcp:0-65535,udp:0-65535,icmp        False
+default-allow-rdp         default        INGRESS    65534     tcp:3389                            False
+default-allow-ssh         default        INGRESS    65534     tcp:22                              False
+
+To show all fields of the firewall, please show in JSON format: --format=json
+To show all fields in table format, please see the examples in --help.
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Setup VPN for 2 networks
+gcloud compute target-vpn-gateways \
+create vpn-1 \
+--network vpn-network-1 \
+--region us-central1
+
+gcloud compute target-vpn-gateways \
+create vpn-2 \
+--network vpn-network-2 \
+--region europe-west1
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ echo $DEVSHELL_PROJECT_ID
+qwiklabs-gcp-726173b5b39be503
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute target-vpn-gateways \
+> create vpn-1 \
+> --network vpn-network-1 \
+> --region us-central1
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/us-central1/targetVpnGateways/vpn-1].
+NAME   NETWORK        REGION
+vpn-1  vpn-network-1  us-central1
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute target-vpn-gateways \
+> create vpn-2 \
+> --network vpn-network-2 \
+> --region europe-west1
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/targetVpnGateways/vpn-2].
+NAME   NETWORK        REGION
+vpn-2  vpn-network-2  europe-west1
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute target-vpn-gateways list
+NAME   NETWORK        REGION
+vpn-2  vpn-network-2  europe-west1
+vpn-1  vpn-network-1  us-central1
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Reserve static IP for each network
+gcloud compute addresses create --region us-central1 vpn-1-static-ip
+
+gcloud compute addresses create --region europe-west1 vpn-2-static-ip
+
+gcloud compute addresses list
+
+export STATIC_IP_VPN_1=35.232.132.123
+export STATIC_IP_VPN_2=192.158.31.146
+
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute addresses create --region us-central1 vpn-1-static-ip
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/us-central1/addresses/vpn-1-static-ip].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute addresses create --region europe-west1 vpn-2-static-ip
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/addresses/vpn-2-static-ip].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute addresses list
+NAME             ADDRESS/RANGE   TYPE      PURPOSE  NETWORK  REGION        SUBNET  STATUS
+vpn-2-static-ip  192.158.31.146  EXTERNAL                    europe-west1          RESERVED
+vpn-1-static-ip  35.232.132.123  EXTERNAL                    us-central1           RESERVED
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ export STATIC_IP_VPN_1=35.232.132.123
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ export STATIC_IP_VPN_2=192.158.31.146
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Create forwarding rules for both vpn gateways
+gcloud compute \
+forwarding-rules create vpn-1-esp \
+--region us-central1 \
+--ip-protocol ESP \
+--address $STATIC_IP_VPN_1 \
+--target-vpn-gateway vpn-1
+
+gcloud compute \
+forwarding-rules create vpn-2-esp \
+--region europe-west1 \
+--ip-protocol ESP \
+--address $STATIC_IP_VPN_2 \
+--target-vpn-gateway vpn-2
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-1-esp \
+> --region us-central1 \
+> --ip-protocol ESP \
+> --address $STATIC_IP_VPN_1 \
+> --target-vpn-gateway vpn-1
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/us-central1/forwardingRules/vpn-1-esp].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-2-esp \
+> --region europe-west1 \
+> --ip-protocol ESP \
+> --address $STATIC_IP_VPN_2 \
+> --target-vpn-gateway vpn-2
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/forwardingRules/vpn-2-esp].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+gcloud compute \
+forwarding-rules create vpn-1-udp500 \
+--region us-central1 \
+--ip-protocol UDP \
+--ports 500 \
+--address $STATIC_IP_VPN_1 \
+--target-vpn-gateway vpn-1
+
+gcloud compute \
+forwarding-rules create vpn-2-udp4500 \
+--region us-central1 \
+--ip-protocol UDP \
+--ports 4500 \
+--address $STATIC_IP_VPN_1 \
+--target-vpn-gateway vpn-1
+
+
+gcloud compute \
+forwarding-rules create vpn-2-udp500 \
+--region europe-west1 \
+--ip-protocol UDP \
+--ports 500 \
+--address $STATIC_IP_VPN_2 \
+--target-vpn-gateway vpn-2
+
+gcloud compute \
+forwarding-rules create vpn-2-udp4500 \
+--region europe-west1 \
+--ip-protocol UDP \
+--ports 4500 \
+--address $STATIC_IP_VPN_2 \
+--target-vpn-gateway vpn-2
+
+
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-1-udp500 \
+> --region us-central1 \
+> --ip-protocol UDP \
+> --ports 500 \
+> --address $STATIC_IP_VPN_1 \
+> --target-vpn-gateway vpn-1
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/us-central1/forwardingRules/vpn-1-udp500].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-2-udp500 \
+> --region europe-west1 \
+> --ip-protocol UDD \
+> --ports 500 \
+> --address $STATIC_IP_VPN_2 \
+> --target-vpn-gateway vpn-2
+ERROR: (gcloud.compute.forwarding-rules.create) argument --ip-protocol: Invalid choice: 'UDD'.
+
+Valid choices are [AH, ESP, ICMP, SCTP, TCP, UDP].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-2-udp500 \
+> --region europe-west1 \
+> --ip-protocol UDP \
+> --ports 500 \
+> --address $STATIC_IP_VPN_2 \
+> --target-vpn-gateway vpn-2
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/forwardingRules/vpn-2-udp500].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-2-udp4500 \
+> --region us-central1 \
+> --ip-protocol UDP \
+> --ports 4500 \
+> --address $STATIC_IP_VPN_1 \
+> --target-vpn-gateway vpn-1
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/us-central1/forwardingRules/vpn-2-udp4500].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> forwarding-rules create vpn-2-udp4500 \
+> --region europe-west1 \
+> --ip-protocol UDP \
+> --ports 4500 \
+> --address $STATIC_IP_VPN_2 \
+> --target-vpn-gateway vpn-2
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/regions/europe-west1/forwardingRules/vpn-2-udp4500].
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute target-vpn-gateways list
+NAME   NETWORK        REGION
+vpn-2  vpn-network-2  europe-west1
+vpn-1  vpn-network-1  us-central1
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Create tunnels
+gcloud compute \
+vpn-tunnels create tunnel1to2 \
+--peer-address $STATIC_IP_VPN_2 \
+--region us-central1 \
+--ike-version 2 \
+--shared-secret gcprocks \
+--target-vpn-gateway vpn-1 \
+--local-traffic-selector 0.0.0.0/0 \
+--remote-traffic-selector 0.0.0.0/0
+
+gcloud compute \
+vpn-tunnels create tunnel2to1 \
+--peer-address $STATIC_IP_VPN_1 \
+--region europe-west1 \
+--ike-version 2 \
+--shared-secret gcprocks \
+--target-vpn-gateway vpn-2 \
+--local-traffic-selector 0.0.0.0/0 \
+--remote-traffic-selector 0.0.0.0/0
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> vpn-tunnels create tunnel1to2 \
+> --peer-address $STATIC_IP_VPN_2 \
+> --region us-central1 \
+> --ike-version 2 \
+> --shared-secret gcprocks \
+> --target-vpn-gateway vpn-1 \
+> --local-traffic-selector 0.0.0.0/0 \
+> --remote-traffic-selector 0.0.0.0/0
+Creating VPN tunnel...done.
+NAME        REGION       GATEWAY  PEER_ADDRESS
+tunnel1to2  us-central1  vpn-1    192.158.31.146
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> vpn-tunnels create tunnel2to1 \
+> --peer-address $STATIC_IP_VPN_1 \
+> --region europe-west1 \
+> --ike-version 2 \
+> --shared-secret gcprocks \
+> --target-vpn-gateway vpn-2 \
+> --local-traffic-selector 0.0.0.0/0 \
+> --remote-traffic-selector 0.0.0.0/0
+Creating VPN tunnel...done.
+NAME        REGION        GATEWAY  PEER_ADDRESS
+tunnel2to1  europe-west1  vpn-2    35.232.132.123
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute vpn-tunnels list
+NAME        REGION        GATEWAY  PEER_ADDRESS
+tunnel2to1  europe-west1  vpn-2    35.232.132.123
+tunnel1to2  us-central1   vpn-1    192.158.31.146
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+### Task 7: Create static routes
+gcloud compute \
+routes create route1to2 \
+--network vpn-network-1 \
+--next-hop-vpn-tunnel tunnel1to2 \
+--next-hop-vpn-tunnel-region us-central1 \
+--destination-range 10.1.3.0/24
+
+gcloud compute \
+routes create route2to1 \
+--network vpn-network-2 \
+--next-hop-vpn-tunnel tunnel2to1 \
+--next-hop-vpn-tunnel-region europe-west1 \
+--destination-range 10.5.4.0/24
+
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> routes create route1to2 \
+> --network vpn-network-1 \
+> --next-hop-vpn-tunnel tunnel1to2 \
+> --next-hop-vpn-tunnel-region us-central1 \
+> --destination-range 10.1.3.0/24
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/global/routes/route1to2].
+NAME       NETWORK        DEST_RANGE   NEXT_HOP                           PRIORITY
+route1to2  vpn-network-1  10.1.3.0/24  us-central1/vpnTunnels/tunnel1to2  1000
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute \
+> routes create route2to1 \
+> --network vpn-network-2 \
+> --next-hop-vpn-tunnel tunnel2to1 \
+> --next-hop-vpn-tunnel-region europe-west1 \
+> --destination-range 10.5.4.0/24
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-726173b5b39be503/global/routes/route2to1].
+NAME       NETWORK        DEST_RANGE   NEXT_HOP                            PRIORITY
+route2to1  vpn-network-2  10.5.4.0/24  europe-west1/vpnTunnels/tunnel2to1  1000
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$ gcloud compute routes list
+NAME                            NETWORK        DEST_RANGE     NEXT_HOP                            PRIORITY
+default-route-00a42decc1e1eb3f  vpn-network-2  0.0.0.0/0      default-internet-gateway            1000
+default-route-0cc1d168aa054106  default        10.170.0.0/20  default                             1000
+default-route-0ed9d9986bf8a30d  default        10.162.0.0/20  default                             1000
+default-route-1267b9f631b283e0  vpn-network-1  10.5.4.0/24    vpn-network-1                       1000
+default-route-2047c73a20987611  default        10.146.0.0/20  default                             1000
+default-route-4a7e0556848e7126  default        10.152.0.0/20  default                             1000
+default-route-4d25d4c3f3824151  default        10.142.0.0/20  default                             1000
+default-route-56b1ba4abd518083  default        10.166.0.0/20  default                             1000
+default-route-59eb389950f69d3d  default        10.150.0.0/20  default                             1000
+default-route-5c3fd3d4a1be64ce  vpn-network-2  10.1.3.0/24    vpn-network-2                       1000
+default-route-645a6683d433408e  default        10.128.0.0/20  default                             1000
+default-route-7783e4cec1c1860c  default        10.160.0.0/20  default                             1000
+default-route-8b4ac9f3dbb515eb  vpn-network-1  0.0.0.0/0      default-internet-gateway            1000
+default-route-96ba981f6ad8128a  default        10.154.0.0/20  default                             1000
+default-route-9a141b59caa26d3c  default        10.164.0.0/20  default                             1000
+default-route-9d5e7d6b91c899e7  default        10.168.0.0/20  default                             1000
+default-route-aeebf3ee6ebf796c  default        10.132.0.0/20  default                             1000
+default-route-ca107d4262f49104  default        10.172.0.0/20  default                             1000
+default-route-cbe5fe8b4006e52e  default        10.174.0.0/20  default                             1000
+default-route-d63d3ba7c9286e20  default        10.138.0.0/20  default                             1000
+default-route-e32e510ce0d457d8  default        0.0.0.0/0      default-internet-gateway            1000
+default-route-f8a1bb4840080419  default        10.156.0.0/20  default                             1000
+default-route-f8e281b8ab3491c2  default        10.148.0.0/20  default                             1000
+default-route-f998dac71fdac841  default        10.140.0.0/20  default                             1000
+default-route-fe1403968d0b2857  default        10.158.0.0/20  default                             1000
+route1to2                       vpn-network-1  10.1.3.0/24    us-central1/vpnTunnels/tunnel1to2   1000
+route2to1                       vpn-network-2  10.5.4.0/24    europe-west1/vpnTunnels/tunnel2to1  1000
+google4023745_student@cloudshell:~ (qwiklabs-gcp-726173b5b39be503)$
+
+
+
+
+
+
+
+
+
+
 
 ## Lab: Virtual Machine Automation and Load Balancing v1.5
 https://googlecoursera.qwiklabs.com/focuses/21489
+Duration: 120min
+Project ID:
+
+### Task 1: Create three VMs using the startup script
+
+for i in {1..3}; \
+do \
+gcloud compute instances create webserver$i \
+--zone=us-central1-a \
+--machine-type=n1-standard-1 \
+--subnet=default \
+--network-tier=PREMIUM \
+--metadata=startup-script-url=gs://cloud-training/archinfra/mystartupscript,my-server-id=WebServer-$i \
+--maintenance-policy=MIGRATE \
+--scopes=https://www.googleapis.com/auth/servicecontrol,\
+https://www.googleapis.com/auth/service.management.readonly,\
+https://www.googleapis.com/auth/logging.write,\
+https://www.googleapis.com/auth/monitoring.write,\
+https://www.googleapis.com/auth/trace.append,\
+https://www.googleapis.com/auth/devstorage.read_only \
+--tags=http-server,network-lb \
+--image=debian-9-stretch-v20190618 \
+--image-project=debian-cloud \
+--boot-disk-size=10GB \
+--boot-disk-type=pd-standard \
+--boot-disk-device-name=webserver$i; \
+done
+
+gcloud compute firewall-rules create default-allow-http \
+--direction=INGRESS \
+--priority=1000 \
+--network=default \
+--action=ALLOW \
+--rules=tcp:80 \
+--source-ranges=0.0.0.0/0 \
+--target-tags=http-server
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute firewall-rules create default-allow-http \
+> --direction=INGRESS \
+> --priority=1000 \
+> --network=default \
+> --action=ALLOW \
+> --rules=tcp:80 \
+> --source-ranges=0.0.0.0/0 \
+> --target-tags=http-server
+Creating firewall...?Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/global/firewalls/default-allow-http].
+Creating firewall...done.
+NAME                NETWORK  DIRECTION  PRIORITY  ALLOW   DENY  DISABLED
+default-allow-http  default  INGRESS    1000      tcp:80        False
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute instances list
+NAME        ZONE           MACHINE_TYPE   PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP      STATUS
+webserver1  us-central1-a  n1-standard-1               10.128.0.5   34.67.244.127    RUNNING
+webserver2  us-central1-a  n1-standard-1               10.128.0.3   34.68.217.200    RUNNING
+webserver3  us-central1-a  n1-standard-1               10.128.0.4   104.155.165.184  RUNNING
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+### Reserve static IP for load balancer
+gcloud compute addresses create --region us-central1 network-lb-ip
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute addresses list
+Listed 0 items.
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute addresses --help
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute addresses create --region us-central1 network-lb-ip
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/regions/us-central1/addresses/network-lb-ip].
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute addresses list
+NAME           ADDRESS/RANGE  TYPE      PURPOSE  NETWORK  REGION       SUBNET  STATUS
+network-lb-ip  34.66.159.17   EXTERNAL                    us-central1          RESERVED
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+### Create a health check
+gcloud compute http-health-checks create "webserver-health" --port "80" --request-path "/" --check-interval "10" --timeout "5" --unhealthy-threshold "3" --healthy-threshold "2"
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute http-health-checks create "webserver-health" --port "80" --request-path "/" --check-interval "10" --timeout "5" --unhealthy-threshold "3" --healthy-threshold "2"
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/global/httpHealthChecks/webserver-health].
+NAME              HOST  PORT  REQUEST_PATH
+webserver-health        80    /
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute regions list
+NAME                     CPUS  DISKS_GB  ADDRESSES  RESERVED_ADDRESSES  STATUS  TURNDOWN_DATE
+asia-east1               0/24  0/4096    0/8        0/8                 UP
+asia-east2               0/24  0/4096    0/8        0/8                 UP
+asia-northeast1          0/24  0/4096    0/8        0/8                 UP
+asia-northeast2          0/24  0/4096    0/8        0/8                 UP
+asia-south1              0/24  0/4096    0/8        0/8                 UP
+asia-southeast1          0/24  0/4096    0/8        0/8                 UP
+australia-southeast1     0/24  0/4096    0/8        0/8                 UP
+europe-north1            0/24  0/4096    0/8        0/8                 UP
+europe-west1             0/24  0/4096    0/8        0/8                 UP
+europe-west2             0/24  0/4096    0/8        0/8                 UP
+europe-west3             0/24  0/4096    0/8        0/8                 UP
+europe-west4             0/24  0/4096    0/8        0/8                 UP
+europe-west6             0/24  0/4096    0/8        0/8                 UP
+northamerica-northeast1  0/24  0/4096    0/8        0/8                 UP
+southamerica-east1       0/24  0/4096    0/8        0/8                 UP
+us-central1              3/24  30/4096   3/8        1/8                 UP
+us-east1                 0/24  0/4096    0/8        0/8                 UP
+us-east4                 0/24  0/4096    0/8        0/8                 UP
+us-west1                 0/24  0/4096    0/8        0/8                 UP
+us-west2                 0/24  0/4096    0/8        0/8                 UP
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute zones list
+
+export MY_REGION=us-central1
+export MY_ZONE1=us-central1-a
+export MY_ZONE2=us-central1-f
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ export MY_REGION=us-central1
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ export MY_ZONE1=us-central1-a
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ export MY_ZONE2=us-central1-f
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+gcloud compute target-pools create extloadbalancer \
+    --region $MY_REGION --http-health-check webserver-health
+    
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute target-pools create extloadbalancer \
+>     --region $MY_REGION --http-health-check webserver-health
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/regions/us-central1/targetPools/extloadbalancer].
+NAME             REGION       SESSION_AFFINITY  BACKUP  HEALTH_CHECKS
+extloadbalancer  us-central1  NONE                      webserver-health
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+gcloud compute target-pools add-instances extloadbalancer \
+    --instances webserver1,webserver2,webserver3 \
+     --instances-zone=$MY_ZONE1
+     
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute target-pools add-instances extloadbalancer \
+>     --instances webserver1,webserver2,webserver3 \
+>      --instances-zone=$MY_ZONE1
+Updated [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/regions/us-central1/targetPools/extloadbalancer].
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+gcloud compute addresses list
+
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute addresses list
+NAME           ADDRESS/RANGE  TYPE      PURPOSE  NETWORK  REGION       SUBNET  STATUS
+network-lb-ip  34.66.159.17   EXTERNAL                    us-central1          RESERVED
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+export STATIC_EXTERNAL_IP=34.66.159.17   
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ export STATIC_EXTERNAL_IP=34.66.159.17
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$
+
+gcloud compute forwarding-rules create webserver-rule \
+    --region $MY_REGION --ports 80 \
+    --address $STATIC_EXTERNAL_IP --target-pool extloadbalancer
+    
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$ gcloud compute forwarding-rules create webserver-rule \
+>     --region $MY_REGION --ports 80 \
+>     --address $STATIC_EXTERNAL_IP --target-pool extloadbalancer
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-90309d67bc388d6b/regions/us-central1/forwardingRules/webserver-rule].
+google4024594_student@cloudshell:~ (qwiklabs-gcp-90309d67bc388d6b)$    
+
+export ILB_IP=34.66.159.17
+
+
+## Lab: Autoscaling v1.5
+URL: https://googlecoursera.qwiklabs.com/focuses/21487
+Duration: 120min
+Project ID: 
+
+
+## Create VM webserver
+gcloud compute instances create webserver \
+--zone=us-central1-a --machine-type=f1-micro \
+--subnet=default --network-tier=PREMIUM \
+--maintenance-policy=MIGRATE \
+--tags=http-server,https-server \
+--image=debian-9-stretch-v20190618 \
+--image-project=debian-cloud \
+--boot-disk-size=10GB \
+--no-boot-disk-auto-delete \
+--boot-disk-type=pd-standard \
+--boot-disk-device-name=webserver
+
+gcloud compute firewall-rules create default-allow-http \
+--direction=INGRESS \
+--priority=1000 \
+--network=default \
+--action=ALLOW \
+--rules=tcp:80 \
+--source-ranges=0.0.0.0/0 \
+--target-tags=http-server
+
+gcloud compute firewall-rules create default-allow-https \
+--direction=INGRESS \
+--priority=1000 \
+--network=default \
+--action=ALLOW \
+--rules=tcp:443 \
+--source-ranges=0.0.0.0/0 \
+--target-tags=https-server
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-ce978e65fdf035a3.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$ gcloud compute instances create webserver \
+> --zone=us-central1-a --machine-type=f1-micro \
+> --subnet=default --network-tier=PREMIUM \
+> --maintenance-policy=MIGRATE \
+> --tags=http-server,https-server \
+> --image=debian-9-stretch-v20190618 \
+> --image-project=debian-cloud \
+> --boot-disk-size=10GB \
+> --no-boot-disk-auto-delete \
+> --boot-disk-type=pd-standard \
+> --boot-disk-device-name=webserver
+WARNING: You have selected a disk size of under [200GB]. This may result in poor I/O performance. For more information, see: https://developers.google.com/compute/docs/disks#performance.
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-ce978e65fdf035a3/zones/us-central1-a/instances/webserver].
+NAME       ZONE           MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP  STATUS
+webserver  us-central1-a  f1-micro                   10.128.0.2   34.66.57.20  RUNNING
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$ gcloud compute firewall-rules create default-allow-http \
+> --direction=INGRESS \
+> --priority=1000 \
+> --network=default \
+> --action=ALLOW \
+> --rules=tcp:80 \
+> --source-ranges=0.0.0.0/0 \
+> --target-tags=http-server
+Creating firewall...?Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-ce978e65fdf035a3/global/firewalls/default-allow-http].
+Creating firewall...done.
+NAME                NETWORK  DIRECTION  PRIORITY  ALLOW   DENY  DISABLED
+default-allow-http  default  INGRESS    1000      tcp:80        False
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$ gcloud compute firewall-rules create default-allow-https \
+> --direction=INGRESS \
+> --priority=1000 \
+> --network=default \
+> --action=ALLOW \
+> --rules=tcp:443 \
+> --source-ranges=0.0.0.0/0 \
+> --target-tags=https-server
+Creating firewall...?Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-ce978e65fdf035a3/global/firewalls/default-allow-https].
+Creating firewall...done.
+NAME                 NETWORK  DIRECTION  PRIORITY  ALLOW    DENY  DISABLED
+default-allow-https  default  INGRESS    1000      tcp:443        False
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$
+
+
+sudo apt update && sudo apt install -y apache2
+
+sudo service apache2 start
+
+sudo a2ensite default-ssl
+sudo a2enmod ssl
+sudo service apache2 restart
+
+sudo update-rc.d apache2 enable
+
+### Create image
+
+gcloud compute images create mywebserver1 \
+--source-disk=webserver \
+--source-disk-zone=us-central1-a
+
+### Task 2: Create an Instance Template based on the custom image
+
+gcloud compute instance-templates create webserver-template \
+--machine-type=f1-micro \
+--network=projects/qwiklabs-gcp-ce978e65fdf035a3/global/networks/default \
+--network-tier=PREMIUM \
+--maintenance-policy=MIGRATE \
+--tags=http-server,https-server \
+--image=mywebserver1 \
+--image-project=qwiklabs-gcp-ce978e65fdf035a3 \
+--boot-disk-size=10GB \
+--boot-disk-type=pd-standard \
+--boot-disk-device-name=webserver-template
+
+
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$ gcloud compute instance-templates create webserver-template \
+> --machine-type=f1-micro \
+> --network=projects/qwiklabs-gcp-ce978e65fdf035a3/global/networks/default \
+> --network-tier=PREMIUM \
+> --maintenance-policy=MIGRATE \
+> --tags=http-server,https-server \
+> --image=mywebserver1 \
+> --image-project=qwiklabs-gcp-ce978e65fdf035a3 \
+> --boot-disk-size=10GB \
+> --boot-disk-type=pd-standard \
+> --boot-disk-device-name=webserver-template
+WARNING: You have selected a disk size of under [200GB]. This may result in poor I/O performance. For more information, see: https://developers.google.com/compute/docs/disks#performance.
+Created [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-ce978e65fdf035a3/global/instanceTemplates/webserver-template].
+NAME                MACHINE_TYPE  PREEMPTIBLE  CREATION_TIMESTAMP
+webserver-template  f1-micro                   2019-07-03T02:07:36.125-07:00
+google4027441_student@cloudshell:~ (qwiklabs-gcp-ce978e65fdf035a3)$
+
+
+gcloud compute --project "qwiklabs-gcp-ce978e65fdf035a3" health-checks create tcp "webserver-healthcheck" --timeout "5" --check-interval "10" --unhealthy-threshold "3" --healthy-threshold "2" --port "80"
+
+gcloud beta compute --project=qwiklabs-gcp-ce978e65fdf035a3 instance-groups managed create mywebserver-group --base-instance-name=mywebserver-group --template=webserver-template --size=1 --zones=us-central1-b,us-central1-c,us-central1-f --instance-redistribution-type=PROACTIVE --health-check=webserver-healthcheck --initial-delay=60
+
+gcloud beta compute --project "qwiklabs-gcp-ce978e65fdf035a3" instance-groups managed set-autoscaling "mywebserver-group" --region "us-central1" --cool-down-period "60" --max-num-replicas "5" --min-num-replicas "1" --target-load-balancing-utilization "0.8"
+
+
+### Task 4: Create a load balancer
+
+export YOUR_LB_IP=34.95.85.219
+
+
+### Create VM stress-test
+gcloud compute instances create stress-test --zone=us-central1-a --machine-type=f1-micro --subnet=default --image=mywebserver1 --image-project=qwiklabs-gcp-ce978e65fdf035a3 --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=stress-test
+
+export LB_IP=34.95.85.219
+
+### Load test
+ab -n 2000000 -c 1000 http://$LB_IP/
+
+google4027441_student@stress-test:~$ ab -n 2000000 -c 1000 http://$LB_IP/
+This is ApacheBench, Version 2.3 <$Revision: 1757674 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 34.95.85.219 (be patient)
+
+Completed 900000 requests
+Completed 1000000 requests
+Finished 1000000 requests
+
+
+Server Software:        Apache/2.4.25
+Server Hostname:        34.95.85.219
+Server Port:            80
+
+Document Path:          /
+Document Length:        10701 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   264.535 seconds
+Complete requests:      1000000
+Failed requests:        39
+   (Connect: 0, Receive: 0, Length: 39, Exceptions: 0)
+Non-2xx responses:      39
+Total transferred:      10972591085 bytes
+HTML transferred:       10700595609 bytes
+Requests per second:    3780.22 [#/sec] (mean)
+Time per request:       264.535 [ms] (mean)
+Time per request:       0.265 [ms] (mean, across all concurrent requests)
+Transfer rate:          40506.64 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1   75 116.1     18    1261
+Processing:     2  189 597.7     42   37522
+Waiting:        1  130 595.8     16   37518
+Total:          3  264 611.9    253   37523
+
+Percentage of the requests served within a certain time (ms)
+  50%    253
+  66%    267
+  75%    273
+  80%    463
+  90%    475
+  95%    487
+  98%   1273
+  99%   3081
+ 100%  37523 (longest request)
+google4027441_student@stress-test:~$ 
+
+
+
+## Lab: Google Cloud Platform API Infrastructure Automation v1.5
+URL: https://googlecoursera.qwiklabs.com/focuses/21486
+Duration: 120min
+Project ID: 
+
+
+
+
+
+## Lab: Deployment Manager v1.5
+URL: https://googlecoursera.qwiklabs.com/focuses/21488
+Duration: 80min
+Project ID: qwiklabs-gcp-1bd0e9f93c1c34f4
+
+### Task 1: Preparation
+mkdir -v deplab && cd $_
+
+gsutil cp gs://cloud-training/archinfra/dm* .
+
+unzip dm-net-v01.zip
+unzip dm-class.zip
+
+Welcome to Cloud Shell! Type "help" to get started.
+Your Cloud Platform project in this session is set to qwiklabs-gcp-1bd0e9f93c1c34f4.
+Use “gcloud config set project [PROJECT_ID]” to change to a different project.
+google4033840_student@cloudshell:~ (qwiklabs-gcp-1bd0e9f93c1c34f4)$ mkdir -v deplab && cd $_
+mkdir: created directory 'deplab'
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ gsutil cp gs://cloud-training/archinfra/dm* .
+Copying gs://cloud-training/archinfra/dm-class.zip...
+Copying gs://cloud-training/archinfra/dm-net-v01.zip...
+Copying gs://cloud-training/archinfra/dm-net.zip...
+Omitting prefix "gs://cloud-training/archinfra/dminfra/". (Did you mean to do cp -r?)
+
+Operation completed over 3 objects/30.6 KiB.
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ ls
+dm-class.zip  dm-net-v01.zip  dm-net.zip
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ unzip dm-net-v01.zip
+Archive:  dm-net-v01.zip
+  inflating: LICENSE
+   creating: __MACOSX/
+  inflating: __MACOSX/._LICENSE
+  inflating: vpn.jinja
+  inflating: __MACOSX/._vpn.jinja
+  inflating: CONTRIBUTING
+  inflating: __MACOSX/._CONTRIBUTING
+  inflating: net-config.yaml
+  inflating: __MACOSX/._net-config.yaml
+  inflating: instance.jinja
+  inflating: __MACOSX/._instance.jinja
+  inflating: network.jinja
+  inflating: __MACOSX/._network.jinja
+  inflating: README.md
+  inflating: __MACOSX/._README.md
+  inflating: vpc-config.yaml
+  inflating: __MACOSX/._vpc-config.yaml
+  inflating: bgp.jinja
+  inflating: __MACOSX/._bgp.jinja
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ unzip dm-class.zip
+Archive:  dm-class.zip
+   creating: dm-class/
+  inflating: dm-class/net-config.yaml
+   creating: __MACOSX/dm-class/
+  inflating: __MACOSX/dm-class/._net-config.yaml
+  inflating: dm-class/instance.jinja
+  inflating: __MACOSX/dm-class/._instance.jinja
+  inflating: dm-class/network.jinja
+  inflating: __MACOSX/dm-class/._network.jinja
+  inflating: __MACOSX/._dm-class
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$
+
+### Task 3: Deploy the configuration
+
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ cat net-config.yaml
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+imports:
+  - path: network.jinja
+  - path: instance.jinja
+resources:
+- name: network
+  type: network.jinja
+  properties:
+    region: europe-west1
+    subnets:
+      - range: 10.10.3.0/29
+        name: web
+      - range: 10.29.60.0/24
+        name: data
+- name: web-instance
+  type: instance.jinja
+  properties:
+    zone: europe-west1-b
+    machineType: n1-standard-1
+    subnetwork: web
+
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$
+
+gcloud deployment-manager deployments create gcpinfra --config=net-config.yaml
+
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$ gcloud deployment-manager deployments create gcpinfra --config=net-config.yaml
+The fingerprint of the deployment is rWxahivApNPUnN_t8yXv7A==
+Waiting for create [operation-1562168000020-58cc894b88167-e76954e9-b740a714]...done.
+Create operation operation-1562168000020-58cc894b88167-e76954e9-b740a714 completed successfully.
+NAME               TYPE                   STATE      ERRORS  INTENT
+data               compute.v1.subnetwork  COMPLETED  []
+gcpinfra-instance  compute.v1.instance    COMPLETED  []
+gcpinfra-network   compute.v1.network     COMPLETED  []
+web                compute.v1.subnetwork  COMPLETED  []
+google4033840_student@cloudshell:~/deplab (qwiklabs-gcp-1bd0e9f93c1c34f4)$
+
+
+
+
+
+
+
+
+export BUCKET_NAME=ipractice4
+export UNIQUE_ID=ipractice4
+
+
+
+
+
+
+
+
+
+
+
+
+
 
