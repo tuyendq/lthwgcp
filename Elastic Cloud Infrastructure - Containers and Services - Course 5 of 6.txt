@@ -1,0 +1,196 @@
+# Elastic Cloud Infrastructure: Containers and Services
+
+
+## Lab: Kubernetes Load Balancing v1.5
+URL: https://googlecoursera.qwiklabs.com/focuses/21485
+Duration: 120min
+Project ID: qwiklabs-gcp-c4921b5c47fdc098
+
+### Task 1: Preparation
+
+export MY_REGION=us-central1
+export MY_ZONE=us-central1-a
+export CLUSTER_NAME=httploadbalancer
+
+gcloud config set project $DEVSHELL_PROJECT_ID
+gcloud config set compute/region $MY_REGION
+gcloud config set compute/zone $MY_ZONE
+
+gcloud config list
+
+### Task 2: Create a Kubernetes Cluster
+
+gcloud container clusters create networklb --num-nodes 3
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ export MY_CLUSTER_NAME=httploadbalancer
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud config set project $DEVSHELL_PROJECT_ID
+Updated property [core/project].
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud config set compute/region $MY_REGION
+Updated property [compute/region].
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud config set compute/rzone $MY_ZONE
+ERROR: (gcloud.config.set) Section [compute] has no property [rzone].
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud config set compute/zone $MY_ZONE
+Updated property [compute/zone].
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud config list
+[component_manager]
+disable_update_check = True
+[compute]
+gce_metadata_read_timeout_sec = 5
+region = us-central1
+zone = us-central1-a
+[core]
+account = google4044142_student@qwiklabs.net
+disable_usage_reporting = False
+project = qwiklabs-gcp-c4921b5c47fdc098
+[metrics]
+environment = devshell
+
+Your active configuration is: [cloudshell-20151]
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud container clusters create networklb --num-node 3
+ERROR: (gcloud.container.clusters.create) unrecognized arguments:
+  --num-node (did you mean '--num-nodes'?)
+  3
+  To search the help text of gcloud commands, run:
+  gcloud help -- SEARCH_TERMS
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud container clusters create networklb --num-nodes 3
+WARNING: In June 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Starting in 1.12, new clusters will have basic authentication disabled by default. Basic authentication can be enabled (or disabled) manually using the `--[no-]enable-basic-auth` flag.
+WARNING: Starting in 1.12, new clusters will not have a client certificate issued. You can manually enable (or disable) the issuance of the client certificate using the `--[no-]issue-client-certificate` flag.
+WARNING: Starting in 1.12, default node pools in new clusters will have their legacy Compute Engine instance metadata endpoints disabled by default. To create a cluster with legacy instance metadata endpoints disabled in the default node pool, run `clusters create` with the flag `--metadata disable-legacy-endpoints=true`.
+WARNING: The Pod address range limits the maximum size of the cluster. Please refer to https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr to learn how to optimize IP address allocation.
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+Creating cluster networklb in us-central1-a... Cluster is being health-checked (master is healthy)...done.
+Created [https://container.googleapis.com/v1/projects/qwiklabs-gcp-c4921b5c47fdc098/zones/us-central1-a/clusters/networklb].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-central1-a/networklb?project=qwiklabs-gcp-c4921b5c47fdc098
+kubeconfig entry generated for networklb.
+NAME       LOCATION       MASTER_VERSION  MASTER_IP      MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+networklb  us-central1-a  1.12.8-gke.10   35.224.42.101  n1-standard-1  1.1
+
+### Task 3: Deploy nginx in Kebernetes cluster
+
+kubectl run nginx --image=nginx --replicas=3
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl run nginx --image=nginx --replicas=3
+kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed in a future version. Use kubectl create instead.
+deployment.apps/nginx created
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+kubectl get pods -owide
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get pods -owide
+NAME                    READY   STATUS    RESTARTS   AGE   IP          NODE                                       NOMINATED NODE
+nginx-dbddb74b8-dltgl   1/1     Running   0          95s   10.24.2.6   gke-networklb-default-pool-5f9d2879-5kmt   <none>
+nginx-dbddb74b8-jw4qw   1/1     Running   0          95s   10.24.2.5   gke-networklb-default-pool-5f9d2879-5kmt   <none>
+nginx-dbddb74b8-mz89v   1/1     Running   0          95s   10.24.0.4   gke-networklb-default-pool-5f9d2879-31sz   <none>
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+
+kubectl expose deployment nginx --port=80 --target-port=80 --type=LoadBalancer
+
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl expose deployment nginx --port=80 --target-port=80 --type=LoadBalancer
+service/nginx exposed
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+kubectl get service nginx
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get service nginx
+NAME    TYPE           CLUSTER-IP    EXTERNAL-IP      PORT(S)        AGE
+nginx   LoadBalancer   10.28.5.226   35.226.164.243   80:32202/TCP   2m26s
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+### Task 4: Undeploy nginx
+
+kubectl delete service nginx
+kubectl delete deployment nginx
+
+gcloud container clusters delete networklb
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl delete service nginx
+service "nginx" deleted
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl delete deployment nginx
+deployment.extensions "nginx" deleted
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud container clusters delete networklb
+The following clusters will be deleted.
+ - [networklb] in [us-central1-a]
+
+Do you want to continue (Y/n)?  y
+
+Deleting cluster networklb...done.
+Deleted [https://container.googleapis.com/v1/projects/qwiklabs-gcp-c4921b5c47fdc098/zones/us-central1-a/clusters/networklb].
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+### Task 5: Create the Kubernetes cluster for HTTP load balancing
+
+gcloud container clusters create $CLUSTER_NAME --zone $MY_ZONE
+
+### Task 6: Create and expose service
+
+kubectl run nginx --image=nginx --port=80
+
+kubectl expose deployment nginx --target-port=80 --type=NodePort
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ gcloud container clusters create $MY_CLUSTER_NAME --zone $MY_ZONE
+WARNING: In June 2019, node auto-upgrade will be enabled by default for newly created clusters and node pools. To disable it, use the `--no-enable-autoupgrade` flag.
+WARNING: Starting in 1.12, new clusters will have basic authentication disabled by default. Basic authentication can be enabled (or disabled) manually using the `--[no-]enable-basic-auth` flag.
+WARNING: Starting in 1.12, new clusters will not have a client certificate issued. You can manually enable (or disable) the issuance of the client certificate using the `--[no-]issue-client-certificate` flag.
+WARNING: Starting in 1.12, default node pools in new clusters will have their legacy Compute Engine instance metadata endpoints disabled by default. To create a cluster with legacy instance metadata endpoints disabled in the default node pool, run `clusters create` with the flag `--metadata disable-legacy-endpoints=true`.
+WARNING: The Pod address range limits the maximum size of the cluster. Please refer to https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr to learn how to optimize IP address allocation.
+This will enable the autorepair feature for nodes. Please see https://cloud.google.com/kubernetes-engine/docs/node-auto-repair for more information on node autorepairs.
+Creating cluster httploadbalancer in us-central1-a... Cluster is being health-checked (master is healthy)...done.
+Created [https://container.googleapis.com/v1/projects/qwiklabs-gcp-c4921b5c47fdc098/zones/us-central1-a/clusters/httploadbalancer].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-central1-a/httploadbalancer?project=qwiklabs-gcp-c4921b5c47fdc098
+kubeconfig entry generated for httploadbalancer.
+NAME              LOCATION       MASTER_VERSION  MASTER_IP       MACHINE_TYPE   NODE_VERSION   NUM_NODES  STATUS
+httploadbalancer  us-central1-a  1.12.8-gke.10   35.188.219.201  n1-standard-1  1.12.8-gke.10  3          RUNNING
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl run nginx --image=nginx --port=80
+kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed in a future version. Use kubectl create instead.
+deployment.apps/nginx created
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl expose deployment nginx --target-port=80 --type=NodePort
+service/nginx exposed
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get service
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.64.0.1     <none>        443/TCP        3m9s
+nginx        NodePort    10.64.2.234   <none>        80:30307/TCP   68s
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+nginx-cdb6b5b95-2tqck   1/1     Running   0          115s
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get deployments
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+nginx   1         1         1            1           2m5s
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$ kubectl get deployment nginx
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+nginx   1         1         1            1           2m15s
+google4044142_student@cloudshell:~ (qwiklabs-gcp-c4921b5c47fdc098)$
+
+
+nano basic-ingress.yaml
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: basic-ingress
+spec:
+    backend:
+        serviceName: nginx
+        servicePort: 80
+
+kubectl create -f basic-ingress.yaml
+
+kubectl get ingress basic-ingress --watch
+
+
+
+
+
+
+
+
+
+
+
+
+
