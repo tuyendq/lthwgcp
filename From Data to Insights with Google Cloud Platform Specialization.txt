@@ -1,0 +1,52 @@
+From Data to Insights with Google Cloud Platform Specialization
+https://www.coursera.org/specializations/from-data-to-insights-google-cloud-platform
+
+
+How the Specialization Works
+Take Courses
+A Coursera Specialization is a series of courses that helps you master a skill. To begin, enroll in the Specialization directly, or review its courses and choose the one you'd like to start with. When you subscribe to a course that is part of a Specialization, you’re automatically subscribed to the full Specialization. It’s okay to complete just one course — you can pause your learning or end your subscription at any time. Visit your learner dashboard to track your course enrollments and your progress.
+
+Hands-on Project
+Every Specialization includes a hands-on project. You'll need to successfully finish the project(s) to complete the Specialization and earn your certificate. If the Specialization includes a separate course for the hands-on project, you'll need to finish each of the other courses before you can start it.
+
+Earn a Certificate
+When you finish every course and complete the hands-on project, you'll earn a Certificate that you can share with prospective employers and your professional network.
+
+how it works
+There are 4 Courses in this Specialization
+COURSE
+1
+Exploring ?and ?Preparing ?your ?Data with BigQuery
+
+4.6
+851 ratings
+•
+137 reviews
+Welcome to the Coursera specialization, From Data to Insights with Google Cloud Platform brought to you by the Google Cloud team. I’m Evan Jones (a data enthusiast) and I’m going to be your guide. This first course in this specialization is Exploring and Preparing your Data with BigQuery. Here we will see what the common challenges faced by data analysts are and how to solve them with the big data tools on Google Cloud Platform. You’ll pick up some SQL along the way and become very familiar with using BigQuery and Cloud Dataprep to analyze and transform your datasets. This course should take about one week to complete, 5-7 total hours of work. By the end of this course, you’ll be able to query and draw insight from millions of records in our BigQuery public datasets. You’ll learn how to assess the quality of your datasets and develop an automated data cleansing pipeline that will output to BigQuery. Lastly, you’ll get to practice writing and troubleshooting SQL on a real Google Analytics e-commerce dataset to drive marketing insights. >>> By enrolling in this specialization you agree to the Qwiklabs Terms of Service as set out in the FAQ and located at: https://qwiklabs.com/terms_of_service <<< 
+COURSE
+2
+Creating New BigQuery Datasets and Visualizing Insights
+
+4.6
+485 ratings
+•
+47 reviews
+This is the second course in the Data to Insights specialization. Here we will cover how to ingest new external datasets into BigQuery and visualize them with Google Data Studio. We will also cover intermediate SQL concepts like multi-table JOINs and UNIONs which will allow you to analyze data across multiple data sources. Note: Even if you have a background in SQL, there are BigQuery specifics (like handling query cache and table wildcards) that may be new to you. >>> By enrolling in this specialization you agree to the Qwiklabs Terms of Service as set out in the FAQ and located at: https://qwiklabs.com/terms_of_service <<< 
+COURSE
+3
+Achieving Advanced Insights with BigQuery
+
+4.7
+367 ratings
+•
+38 reviews
+The third course in this specialization is Achieving Advanced Insights with BigQuery. Here we will build on your growing knowledge of SQL as we dive into advanced functions and how to break apart a complex query into manageable steps. We will cover the internal architecture of BigQuery (column-based sharded storage) and advanced SQL topics like nested and repeated fields through the use of Arrays and Structs. Lastly we will dive into optimizing your queries for performance and how you can secure your data through authorized views. >>> By enrolling in this specialization you agree to the Qwiklabs Terms of Service as set out in the FAQ and located at: https://qwiklabs.com/terms_of_service <<< 
+COURSE
+4
+Applying Machine Learning to your Data with GCP
+
+4.7
+285 ratings
+•
+27 reviews
+Want to know how to query and process petabytes of data in seconds? Curious about data analysis that scales automatically as your data grows? Welcome to the Data Insights course! This 1-week, accelerated online course teaches participants how to derive insights through data analysis and visualization using the Google Cloud Platform. The course features interactive scenarios and hands-on labs where participants explore, mine, load, visualize, and extract insights from diverse Google BigQuery datasets. The course covers data loading, querying, schema modeling, optimizing performance, query pricing, and data visualization. PREREQUISITES To get the most out of this course, participants must complete the prior courses in this specialization: • Exploring and Preparing your Data • Storing and Visualizing your Data • Architecture and Performance >>> By enrolling in this specialization you agree to the Qwiklabs Terms of Service as set out in the FAQ and located at: https://qwiklabs.com/terms_of_service <<< 

@@ -334,3 +334,5 @@ cd ~/dmsamples
 git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
 
 
+
+ab -n 10000 -c 100 http://35.244.247.198:8080/

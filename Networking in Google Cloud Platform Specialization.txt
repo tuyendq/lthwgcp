@@ -1,0 +1,31 @@
+Networking in Google Cloud Platform Specialization
+https://www.coursera.org/specializations/networking-google-cloud-platform
+
+There are 3 Courses in this Specialization
+COURSE
+1
+Google Cloud Platform Fundamentals: Core Infrastructure
+
+4.7
+13,344 ratings
+•
+2,155 reviews
+This course introduces you to important concepts and terminology for working with Google Cloud Platform (GCP). You learn about, and compare, many of the computing and storage services available in Google Cloud Platform, including Google App Engine, Google Compute Engine, Google Kubernetes Engine, Google Cloud Storage, Google Cloud SQL, and BigQuery. You learn about important resource and policy management tools, such as the Google Cloud Resource Manager hierarchy and Google Cloud Identity and Access Management. Hands-on labs give you foundational skills for working with GCP. Note: •Google services are currently unavailable in China. 
+COURSE
+2
+Networking in GCP: Defining and Implementing Networks
+
+4.8
+386 ratings
+•
+44 reviews
+This self-paced training course gives participants broad study of networking options on Google Cloud Platform. Through recorded lectures, demonstrations, and hands-on labs, participants explore and deploy GCP networking technologies, such as Google Virtual Private Cloud (VPC) networks, subnets and firewalls. The course also covers access control to networks, sharing networks and load balancing. To get the most out of this course, participants should have: *Completed Google Cloud Platform Fundamentals: Core Infrastructure or have equivalent experience *Prior understanding of the OSI 7-layer model *Prior understanding of IPv4 addressing *Prior experience with managing IPv4 routes >>> By enrolling in this course you agree to the Qwiklabs Terms of Service as set out in the FAQ and located at: https://qwiklabs.com/terms_of_service <<< 
+COURSE
+3
+Networking in GCP: Hybrid Connectivity and Network Management
+
+4.8
+257 ratings
+•
+33 reviews
+This self-paced training course builds on the Networking in GCP: Defining and Implementing Networks course and enhances participants study of networking options on Google Cloud Platform. Through recorded lectures, demonstrations, and hands-on labs, participants explore and deploy GCP networking technologies, such as the interconnection among networks, common network design patterns and the automated deployment of networks using Deployment Manager or Terraform. The course also covers networking pricing and billing to help you optimize your network spend and monitoring and logging features that can help you troubleshoot your GCP network infrastructure. To get the most out of this course, participants should have: *Completed Google Cloud Platform Fundamentals: Core Infrastructure or have equivalent experience *Completed Networking in GCP: Defining and Implementing Networks *Prior understanding of the OSI 7-layer model *Prior understanding of IPv4 addressing *Prior experience with managing IPv4 routes 
