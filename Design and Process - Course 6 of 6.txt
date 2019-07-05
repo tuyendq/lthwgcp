@@ -12,5 +12,325 @@ Duration: 90min
 Project ID: qwiklabs-gcp-5d1d8f10a40e6751
 
 
+## Lab: Deployment Manager: Package and deploy
+URL: https://googlecoursera.qwiklabs.com/focuses/16467
+
+
+### Create the directory structure for the deployment
+mkdir -pv ~/echolb/echo/echo ~/echolb/deployment-manager-examples
+
+
+~/echolb/echo/echo/__init__.py
+
+#!/usr/bin/env python
+import logging
+import socket
+import os.path
+import pkg_resources
+from flask import Flask, request
+app = Flask(__name__)
+try:
+    __version__ = pkg_resources.require("echo")[0].version
+except pkg_resources.DistributionNotFound:
+    __version__ = 'dev'
+except:
+    raise
+# Load Conf
+app.config.from_pyfile('default.cfg')
+if os.path.isfile('/etc/echo.cfg'):
+    app.config.from_pyfile('/etc/echo.cfg')
+@app.route('/', methods=['POST', 'PUT'])
+def echo():
+    """Echo data"""
+    return request.get_data() + '\n'
+@app.route('/', methods=['GET'])
+def whoami():
+    """Echo hostname and version"""
+    return '''<body style="background: {};">
+    hostname: {}
+</body>
+'''.format(app.config['BACKGROUND'], socket.gethostname())
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error occurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+if __name__ == '__main__':
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host=app.config['HOST'],
+            port=app.config['PORT'],
+            debug=True)
+# [END app]
+
+~/echolb/echo/echo/default.cfg
+
+HOST='0.0.0.0'
+PORT=80
+BACKGROUND='#F6F6F6'
+
+~/echolb/echo/setup.py
+
+from setuptools import setup
+
+setup(
+    name="echo",
+    version="0.0.1",
+    author="Google Cloud Training",
+    author_email="cloud-training@google.com",
+
+    # Packages
+    packages=["echo"],
+
+    # Include additional files into the package
+    include_package_data=True,
+
+    # Details
+    #url="http://pypi.python.org/pypi/MyApplication_v010/",
+
+    license="LICENSE.txt",
+    # description="Useful towel-related stuff.",
+
+    # long_description=open("README.txt").read(),
+
+    # Dependent packages (distributions)
+    install_requires=[
+        "flask==0.12.2",
+        "gunicorn"
+    ]
+)
+
+~/echolb/echo/LICENSE.txt
+Copyright 2017 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License
+
+~/echolb/echo/MANIFEST.in
+recursive-include echo/templates *
+include echo/default.cfg
+
+~/echolb/deployment-manager-examples/config.yaml
+imports:
+  - path: instance.jinja
+  - path: install-echo.sh
+    name: startup-script
+resources:
+  - name: instance
+    type: instance.jinja
+    properties:
+      zone: [ZONE]
+      tags:
+        - http
+      metadata:
+        - key: echo
+          value: https://storage.googleapis.com/[BUCKET]/echo-0.0.1.tar.gz
+          
+
+~/echolb/deployment-manager-examples/install-echo.sh
+
+#!/bin/bash -e
+
+ATTR=http://metadata.google.internal/computeMetadata/v1/instance/attributes
+
+apt-get update
+apt-get -y install python-pip
+python -m pip install --upgrade pip
+
+if pkg=$(curl -sf "${ATTR}/echo" -H "Metadata-Flavor: Google"); then
+    python -m pip install $pkg
+    gunicorn -b 0.0.0.0:80 -w 4 echo:app
+fi
+
+
+~/echolb/deployment-manager-examples/instance.jinja
+
+{#
+Copyright 2017 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#}
+
+resources:
+- name: {{ env['deployment'] }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties['zone'] }}
+    machineType: zones/{{ properties['zone'] }}/machineTypes/{{ properties['machineType'] }}
+    metadata:
+      items:
+        - key: deployment
+          value: {{ env['deployment'] }}
+        {% if imports['startup-script'] %}
+        - key: startup-script
+          value: |
+            {{ imports['startup-script']|indent(12) }}
+        {% endif %}
+        {% for i in properties["metadata"] %}
+        - {{ i }}
+        {% endfor %}
+    disks:
+      - deviceName: boot
+        boot: true
+        autoDelete: true
+        initializeParams:
+          diskSizeGb: 10
+          sourceImage: {{ properties['sourceImage'] }}
+    networkInterfaces:
+      - name: {{ ID }}-eth0
+        network: {{ properties['network'] }}
+        {% if properties['subnet'] %}
+        subnetwork: {{ properties['subnet'] }}
+        {% endif %}
+        accessConfigs:
+          - name: eth0
+            type: ONE_TO_ONE_NAT
+    serviceAccounts:
+      - email: {{ properties['serviceAccount'] }}
+        scopes:
+          - 'https://www.googleapis.com/auth/cloud-platform'
+    {% if properties['tags'] %}
+    tags:
+      items:
+        {% for i in properties["tags"] %}
+        - {{ i }}
+        {% endfor %}
+    {% endif %}
+
+outputs:
+  - name: url
+    value: http://$(ref.{{ env['deployment'] }}.networkInterfaces[0].accessConfigs[0].natIP)
+    
+
+~/echolb/deployment-manager-examples/instance.jinja.schema
+info:
+  title: Test instance
+  author: cloud-training@google.com
+  description: |
+    Creates a test instance
+  version: 0.1
+imports:
+  - path: instance.jinja
+required:
+  - zone
+properties:
+  zone:
+    type: string
+    description: i.e. us-east1-d
+
+  network:
+    type: string
+    description: Network URL i.e. projects/project/global/networks/network
+    default: global/networks/default
+  subnet:
+    type: string
+    description: Subnet URL i.e regions/region/subnetworks/subnetwork
+  sourceImage:
+    type: string
+    description: Image uri
+    default: projects/ubuntu-os-cloud/global/images/family/ubuntu-1404-lts
+
+  machineType:
+    type: string
+    default: n1-standard-1
+
+  serviceAccount:
+    type: string
+    description: Service account with permissions to label resources i.e. Project editor.
+    default: default
+  tags:
+    type: array
+    description: Array of tags
+    items:
+      type: string
+  metadata:
+    type: array
+    description: Array of metadata key pairs
+    items:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+          
+
+### Create the package
+cd ~/echolb/echo
+python setup.py sdist
+cd dist
+ls
+
+
+MY_BUCKET=ipractice5
+
+gsutil -h 'Content-Type: application/gzip' -h 'Cache-Control:private' cp -a public-read echo-0.0.1.tar.gz gs://$MY_BUCKET
+
+
+
+
+MY_BUCKET=ipractice5
+
+sudo python -m pip install http://storage.googleapis.com/$MY_BUCKET/echo-0.0.1.tar.gz
+
+sudo gunicorn -b 0.0.0.0:80 -w 4 echo:app
+
+cd ~/echolb/deployment-manager-examples
+
+gcloud deployment-manager deployments create echo-service --config config.yaml
+
+google4056263_student@cloudshell:~/echolb/deployment-manager-examples (qwiklabs-gcp-b080291536d8d776)$ gcloud deployment-manager deployments create echo-service --config config.yaml
+The fingerprint of the deployment is 1l1a1QBNER_S2hsdliCJog==
+Waiting for create [operation-1562305003041-58ce87abcb1a1-2198be5b-d4303816]...done.
+Create operation operation-1562305003041-58ce87abcb1a1-2198be5b-d4303816 completed successfully.
+NAME          TYPE                 STATE      ERRORS  INTENT
+echo-service  compute.v1.instance  COMPLETED  []
+google4056263_student@cloudshell:~/echolb/deployment-manager-examples (qwiklabs-gcp-b080291536d8d776)$
+
+gcloud compute --project=qwiklabs-gcp-b080291536d8d776 firewall-rules create allow-http --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=http
+
+
+curl -d "Design and Process class ROCKS" -X POST http://[EXTERNAL_IP]/
+curl -d "Design and Process class ROCKS" -X POST http://http://35.238.215.60/
+
+
+
+## Lab: Deployment Manager: Adding load balancing
+URL: https://googlecoursera.qwiklabs.com/focuses/16468
+
+gsutil cp gs://cloud-training/archdp/archdp-echo.tar.gz .
+
+
+## Lab: Deployment Manager: Full Production + (Stackdriver)
+URL: https://googlecoursera.qwiklabs.com/focuses/16469
+
+mkdir ~/dmsamples
+cd ~/dmsamples
+
+git clone https://github.com/GoogleCloudPlatform/deploymentmanager-samples.git
 
 
