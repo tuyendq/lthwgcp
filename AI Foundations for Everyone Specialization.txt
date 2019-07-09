@@ -1,0 +1,90 @@
+AI Foundations for Everyone Specialization
+https://www.coursera.org/specializations/ai-foundations-for-everyone?
+
+
+About this Specialization
+5,161 recent views
+Artificial Intelligence (AI) is no longer science fiction. It is rapidly permeating all industries and having a profound impact on virtually every aspect of our existence. Whether you are an executive, a leader, an industry professional, a researcher, or a student - understanding AI, its impact and transformative potential for your organization and our society is of paramount importance.
+
+This specialization is designed for those with little or no background in AI, whether you have technology background or not, and does not require any programming skills. It is designed to give you a firm understanding of what is AI, its applications and use cases across various industries. You will become acquainted with terms like Machine Learning, Deep Learning and Neural Networks.
+
+Furthermore, it will familiarize you with IBM Watson AI services that enable any business to quickly and easily employ pre-built AI smarts to their products and solutions. You will also learn about creating intelligent virtual assistants and how they can be leveraged in different scenarios.
+
+By the end of this specialization, learners will have had hands-on interactions with several AI environments and applications, and have built and deployed an AI enabled chatbot on a website – without any coding.
+
+
+SHOW LESS
+SKILLS YOU WILL GAIN
+Data Science
+Deep Learning
+Artificial Intelligence (AI)
+Machine Learning
+Watson (Computer)
+100% online courses
+Start instantly and learn at your own schedule.
+Flexible Schedule
+Set and maintain flexible deadlines.
+Beginner Level
+Approx. 1 month to complete
+Suggested 11 hours/week
+English
+Subtitles: English
+
+
+
+
+
+
+
+
+
+How the Specialization Works
+Take Courses
+A Coursera Specialization is a series of courses that helps you master a skill. To begin, enroll in the Specialization directly, or review its courses and choose the one you'd like to start with. When you subscribe to a course that is part of a Specialization, you’re automatically subscribed to the full Specialization. It’s okay to complete just one course — you can pause your learning or end your subscription at any time. Visit your learner dashboard to track your course enrollments and your progress.
+
+Hands-on Project
+Every Specialization includes a hands-on project. You'll need to successfully finish the project(s) to complete the Specialization and earn your certificate. If the Specialization includes a separate course for the hands-on project, you'll need to finish each of the other courses before you can start it.
+
+Earn a Certificate
+When you finish every course and complete the hands-on project, you'll earn a Certificate that you can share with prospective employers and your professional network.
+
+how it works
+There are 3 Courses in this Specialization
+COURSE
+1
+Introduction to Artificial Intelligence (AI)
+
+4.7
+48 ratings
+•
+13 reviews
+In this course you will learn what Artificial Intelligence (AI) is, explore use cases and applications of AI, understand AI concepts and terms like machine learning, deep learning and neural networks. You will be exposed to various issues and concerns surrounding AI such as ethics and bias, & jobs, and get advice from experts about learning and starting a career in AI. You will also demonstrate AI in action with a mini project. This course does not require any programming or computer science expertise and is designed to introduce the basics of AI to anyone whether you have a technical background or not. 
+COURSE
+2
+Getting Started with AI using IBM Watson
+In this course you will learn how to quickly and easily get started with Artificial Intelligence using IBM Watson. You will understand how Watson works, become familiar with its use
+cases and real life client examples, and be introduced to several of Watson AI services from IBM that enable anyone to easily apply AI and build smart apps. You will ... 
+COURSE
+3
+Building AI Powered Chatbots Without Programming
+
+4.7
+158 ratings
+•
+38 reviews
+This course will teach you how to create useful chatbots without the need to write any code. Leveraging IBM Watson's Natural Language Processing capabilities, you'll learn how to plan, implement, test, and deploy chatbots that delight your users, rather than frustrate them. True to our promise of not requiring any code, you'll learn how to visually create chatbots with Watson Assistant (formerly Watson Conversation) and how to deploy them on your own website through a handy WordPress plugin. Don't have a website? No worries, one will be provided to you. Chatbots are a hot topic in our industry and are about to go big. New jobs requiring this specific skill are being added every day, consultants demand premium rates, and the interest in chatbots is quickly exploding. Gartner predicts that by 2020, 85% of customer interactions with the enterprise will be through automated means (that's chatbots and related technologies). Here is your chance to learn this highly in demand set of skills with a gentle introduction to the topic that leaves no stone unturned. 
+Instructors
+Rav Ahuja
+AI and Data Science Program Director
+IBM
+Antonio Cangiano
+Software Developer and Technical Evangelist
+IBM Developer Skills Network
+About IBM
+IBM offers a wide range of technology and consulting services; a broad portfolio of middleware for collaboration,
+predictive analytics, software development and systems management; and the world's most advanced servers
+and supercomputers. Utilizing its business consulting, technology and R&D expertise, IBM helps clients become
+"smarter" as the planet becomes more digitally interconnected. IBM invests more than $6 billion a year in R&D,
+just completing its 21st year of patent leadership. IBM Research has received recognition beyond any
+commercial technology research organization and is home to 5 Nobel Laureates, 9 US National Medals of
+Technology, 5 US National Medals of Science, 6 Turing Awards, and 10 Inductees in US Inventors Hall of Fame.
