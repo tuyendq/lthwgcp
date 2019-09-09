@@ -1,5 +1,12 @@
 # Learn the hard Way - Google Cloud Platform
 
+## Common environment variable
+### Project ID
+<pre>
+<code>
+export PROJECT_ID=$(gcloud config get-value project)
+</code>
+</pre>
 
 ## Firewall rules
 
