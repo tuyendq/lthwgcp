@@ -8,6 +8,13 @@ export PROJECT_ID=$(gcloud config get-value project)
 </code>
 </pre>
 
+### Compute Engine default service account
+<pre>
+<code>
+export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute Engine default service account" --format='value(email)')
+</code>
+</pre>
+
 ## Firewall rules
 
 ### List all firewall rules
