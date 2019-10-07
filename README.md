@@ -45,4 +45,36 @@ $ gcloud compute firewall-rules create "default-allow-health-check" \
 </code>
 </pre>
 
-
+## Deployment Manager
+### Create VM
+create-vm.yaml file
+Replace [PROJECT_ID]
+<pre>
+<code>
+resources:
+- name: myfirstvm
+  type: compute.v1.instance
+  properties:
+    #basic configuration comes here
+        zone: us-central1-a
+        machineType: https://www.googleapis.com/compute/v1/projects/[PROJECT_ID]/zones/us-central1-a/machineTypes/f1-micro
+        disks:
+        - deviceName: boot
+          type: PERSISTENT
+          boot: true
+          autoDelete: true
+          initializeParams:
+            sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180105
+        networkInterfaces:
+        - network: https://www.googleapis.com/compute/v1/projects/[PROJECT_ID]/global/networks/default
+          accessConfigs:
+          - name: External NAT
+            type: ONE_TO_ONE_NAT
+ </code>
+ </pre>
+ 
+ <pre>
+ <code>
+ gcloud deployment-manager deployments create create-vm --config create-vm.yaml
+ </code>
+ </pre>
