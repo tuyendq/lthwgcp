@@ -1,0 +1,17 @@
+Approx. 7 hours to complete
+Suggested: 1 week of study, 5-7
+hours/week
+
+About this Course
+109,332 recent views
+This one-week, accelerated online class equips students to containerize workloads in Docker containers, deploy them to Kubernetes clusters provided by Google Kubernetes Engine, and scale those workloads to handle increased traffic.  Students also learn how to continuously deploy new code in a Kubernetes cluster to provide application updates.
+
+At the end of the course, you will be able to:
+• Understand container basics
+• Containerize an existing application
+• Understand Kubernetes concepts and principles
+• Deploy applications to Kubernetes using the CLI
+• Set up a continuous delivery pipeline using Jenkins
+• Locate more documentation and training.
+
+To get the most of out of this course, learners should have basic proficiency with command-line tools and Linux operating system environments, as well as Web server technologies such as Nginx. We also recommend systems operations experience, including deploying and managing applications, either on-premises or in a public cloud environment.
