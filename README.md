@@ -59,6 +59,19 @@ gcloud compute firewall-rules create "default-allow-health-check" \
       --target-tags="http-server"
 ```
 
+```bash
+export NETWORK_NAME="default"
+export FWRULE_NAME="fw-allow-health-checks"
+
+gcloud compute firewall-rules create $FWRULE_NAME \
+--network $NETWORK_NAME \
+--action allow \
+--target-tags allow-health-checks \
+--source-ranges 130.211.0.0/22,35.191.0.0/16 \
+--rules tcp:80
+```
+
+
 ## VPC Network
 
 ### VPC Network Peering
