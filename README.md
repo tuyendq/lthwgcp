@@ -5,55 +5,83 @@ Follow Coursera Specilization
 =======
 ## Common environment variable
 ### Project ID
-<pre>
-<code>
+```bash
 export PROJECT_ID=$(gcloud config get-value project)
-</code>
-</pre>
+```
 
 ### Compute Engine default service account
-<pre>
-<code>
+
+```bash
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute Engine default service account" --format='value(email)')
-</code>
-</pre>
+```
+
+## Computer Engine
+
+### Create VM
+```bash
+gcloud compute instances create test-vm --machine-type=n1-standard-1 --subnet=default --zone=us-central1-a
+```
+
+### Create VM with multiple network interfaces
+```bash
+gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type=n1-standard-4 \
+    --network-interface subnet=privatesubnet-us \
+    --network-interface subnet=managementsubnet-us \
+    --network-interface subnet=mynetwork
+```
 
 ## Firewall rules
 
 ### List all firewall rules
-<pre>
-<code>
-$ gcloud compute firewall-rules list
-</code>
-</pre>
+```bash
+gcloud compute firewall-rules list
+```
 
-<pre>
-<code>
-$ gcloud compute firewall-rules create "default-allow-http" \
+```bash
+gcloud compute firewall-rules create "default-allow-http" \
       --allow tcp:80 \
       --source-ranges="0.0.0.0/0" \
       --description="Allow Web Server traffic" \
       --target-tags="http-server"
-</code>
-</pre>
+```
 
-
-<pre>
-<code>
-$ gcloud compute firewall-rules create "default-allow-health-check" \
+```bash
+gcloud compute firewall-rules create "default-allow-health-check" \
       --allow tcp \
       --source-ranges="130.211.0.0/22,35.191.0.0/16" \
       --description="Allow health check traffic" \
       --target-tags="http-server"
-</code>
-</pre>
+```
+
+## VPC Network
+
+### VPC Network Peering
+```bash
+export project_a=$(gcloud config get-value project)
+export project_b=$(gcloud config get-value project)
+
+gcloud compute networks peerings create peering-1-2 \
+    --network mynetwork \
+    --peer-project $project_b \
+    --peer-network privatenet \
+    --import-custom-routes \
+    --export-custom-routes
+
+gcloud compute networks peerings create peering-2-1 \
+     --network privatenet \
+     --peer-project $project_a \
+     --peer-network mynetwork \
+     --import-custom-routes \
+     --export-custom-routes
+```
+
 
 ## Deployment Manager
 ### Create VM
 create-vm.yaml file
 Replace [PROJECT_ID]
-<pre>
-<code>
+
+```yaml
 resources:
 - name: myfirstvm
   type: compute.v1.instance
@@ -73,11 +101,8 @@ resources:
           accessConfigs:
           - name: External NAT
             type: ONE_TO_ONE_NAT
- </code>
- </pre>
+```
  
- <pre>
- <code>
+```bash
  gcloud deployment-manager deployments create create-vm --config create-vm.yaml
- </code>
- </pre>
+```
