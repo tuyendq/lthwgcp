@@ -81,6 +81,18 @@ gcloud compute networks peerings create peering-2-1 \
      --export-custom-routes
 ```
 
+## Cloud Storage
+
+```bash
+export BUCKET_NAME=$(gcloud config get-value project)
+gsutil mb -b on -l us-east1 gs://$BUCKET_NAME
+```
+
+```bash
+gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME
+# gsutil iam ch -d allUsers:objectViewer gs://$BUCKET_NAME
+```
+
 
 ## Deployment Manager
 ### Create VM
