@@ -21,6 +21,12 @@ export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute
 ```bash
 gcloud compute instances create test-vm --machine-type=n1-standard-1 --subnet=default --zone=us-central1-a
 ```
+```bash
+gcloud compute instances create nginx-vm \
+--zone us-central1-a \
+--machine-type f1-micro \
+--metadata startup-script=sudo\ apt\ update$'\n'sudo\ apt\ install\ -y\ nginx-light$'\n'sudo\ systemctl\ enable\ nginx$'\n'sudo\ service\ nginx\ start
+```
 
 ### Create VM with multiple network interfaces
 ```bash
