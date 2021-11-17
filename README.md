@@ -128,6 +128,12 @@ gcloud compute routers nats create $NAT_CONFIG \
 
 ## Cloud Storage
 
+### Create a multi_region bucket
+```bash
+export BUCKET_NAME=$(gcloud config get-value project)
+gsutil mb gs://$BUCKET_NAME
+```
+
 ```bash
 export BUCKET_NAME=$(gcloud config get-value project)
 gsutil mb -b on -l us-east1 gs://$BUCKET_NAME
