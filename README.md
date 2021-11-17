@@ -105,6 +105,27 @@ gcloud compute networks peerings create peering-2-1 \
      --export-custom-routes
 ```
 
+### Cloud NAT
+
+```bash
+export NETWORK_NAME="my-internal-app"
+export REGION=us-central1
+export NAT_ROUTER=nat-router-us-central1
+export NAT_CONFIG=nat-config
+
+gcloud compute routers create $NAT_ROUTER \
+    --network $NETWORK_NAME \
+    --region $REGION
+
+gcloud compute routers nats create $NAT_CONFIG \
+    --router=$NAT_ROUTER \
+    --auto-allocate-nat-external-ips \
+    --nat-all-subnet-ip-ranges \
+    --enable-logging \
+    --region=$REGION
+
+```
+
 ## Cloud Storage
 
 ```bash
