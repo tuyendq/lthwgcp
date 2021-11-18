@@ -132,6 +132,7 @@ gcloud compute routers nats create $NAT_CONFIG \
 ```bash
 export BUCKET_NAME=$(gcloud config get-value project)
 gsutil mb gs://$BUCKET_NAME
+# gsutil rm -r gs://$BUCKET_NAME
 ```
 
 ```bash
@@ -153,6 +154,7 @@ gsutil cp gs://$BUCKET_NAME .
 
 ```bash
 gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME/ada.jpg
+# gsutil acl ch -d AllUsers gs://$BUCKET_NAME/ada.jpg
 ```
 
 
