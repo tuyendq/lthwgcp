@@ -158,6 +158,17 @@ gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME/ada.jpg
 ```
 
 
+## Pub/Sub
+
+```bash
+export TOPIC=MyTopic
+gcloud pubsub topics create $TOPIC
+gcloud pubsub topics publish $TOPIC --message="Hello World!" --attribute=KEY1=VAL1,KEY2=VAL2
+
+export SUBSCRIPTION=MySub
+gcloud pubsub subscriptions create $SUBSCRIPTION --topic=$TOPIC
+gcloud pubsub subscriptions pull --auto-ack $SUBSCRIPTION
+```
 
 
 ## Deployment Manager
