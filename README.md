@@ -144,6 +144,19 @@ gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME
 # gsutil iam ch -d allUsers:objectViewer gs://$BUCKET_NAME
 ```
 
+```bash
+gsutil ls -l gs://$BUCKET_NAME
+gsutil cp ada.jpg gs://$BUCKET_NAME
+gsutil rm ada.jpg gs://$BUCKET_NAME
+gsutil cp gs://$BUCKET_NAME .
+```
+
+```bash
+gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME/ada.jpg
+```
+
+
+
 
 ## Deployment Manager
 ### Create VM
