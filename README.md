@@ -52,6 +52,11 @@ gcloud compute networks create privatenet --subnet-mode=custom
 gcloud compute networks subnets create privatesubnet-us --network=privatenet --region=us-central1 --range=172.16.0.0/24
 gcloud compute networks subnets create privatesubnet-eu --network=privatenet --region=europe-west1 --range=172.20.0.0/20
 
+gcloud compute networks create vpc-net --subnet-mode=custom
+gcloud compute networks subnets create vpc-subnet --network=vpc-net \
+--region=us-central1 --range=10.1.3.0/24 \
+--enable-flow-logs
+
 ```
 
 ### VPC Network Peering
