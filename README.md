@@ -91,6 +91,16 @@ gcloud compute routers nats create $NAT_CONFIG \
 
 ```
 
+### Cloud Router
+
+Create a cloud router in the vpc-demo network:  
+```bash
+gcloud compute routers create vpc-demo-router1 \
+    --region us-central1 \
+    --network vpc-demo \
+    --asn 65001
+```
+
 ## Firewall rules
 
 ### List all firewall rules
