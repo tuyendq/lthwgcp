@@ -134,6 +134,13 @@ gcloud compute firewall-rules create on-prem-allow-internal \
   --source-ranges 192.168.0.0/16
 ```
 
+### Create a firewall rule to allow SSH and ICMP traffic to the instances in 'on-prem' network
+```bash
+gcloud compute firewall-rules create on-prem-allow-ssh-icmp \
+    --network on-prem \
+    --allow tcp:22,icmp
+```
+
 ## Cloud Storage
 
 ### Create a multi_region bucket
