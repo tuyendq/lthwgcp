@@ -19,7 +19,11 @@ export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute
 
 ### Create VM
 ```bash
-gcloud compute instances create test-vm --machine-type=n1-standard-1 --subnet=default --zone=us-central1-a
+gcloud compute instances create vm-premium --machine-type=n1-standard-1 --subnet=default --zone=us-central1-a
+
+gcloud compute instances create vm-standard --machine-type=n1-standard-1 --subnet=default --zone=us-central1-c \
+--network-tier STANDARD
+
 ```
 ```bash
 gcloud compute instances create nginx-vm \
