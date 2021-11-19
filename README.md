@@ -36,41 +36,6 @@ gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type
     --network-interface subnet=mynetwork
 ```
 
-## Firewall rules
-
-### List all firewall rules
-```bash
-gcloud compute firewall-rules list
-```
-
-```bash
-gcloud compute firewall-rules create "default-allow-http" \
-      --allow tcp:80 \
-      --source-ranges="0.0.0.0/0" \
-      --description="Allow Web Server traffic" \
-      --target-tags="http-server"
-```
-
-```bash
-gcloud compute firewall-rules create "default-allow-health-check" \
-      --allow tcp \
-      --source-ranges="130.211.0.0/22,35.191.0.0/16" \
-      --description="Allow health check traffic" \
-      --target-tags="http-server"
-```
-
-```bash
-export NETWORK_NAME="default"
-export FWRULE_NAME="fw-allow-health-checks"
-
-gcloud compute firewall-rules create $FWRULE_NAME \
---network $NETWORK_NAME \
---action allow \
---target-tags allow-health-checks \
---source-ranges 130.211.0.0/22,35.191.0.0/16 \
---rules tcp:80
-```
-
 
 ## VPC Network
 
@@ -124,6 +89,49 @@ gcloud compute routers nats create $NAT_CONFIG \
     --enable-logging \
     --region=$REGION
 
+```
+
+## Firewall rules
+
+### List all firewall rules
+```bash
+gcloud compute firewall-rules list
+```
+
+```bash
+gcloud compute firewall-rules create "default-allow-http" \
+      --allow tcp:80 \
+      --source-ranges="0.0.0.0/0" \
+      --description="Allow Web Server traffic" \
+      --target-tags="http-server"
+```
+
+```bash
+gcloud compute firewall-rules create "default-allow-health-check" \
+      --allow tcp \
+      --source-ranges="130.211.0.0/22,35.191.0.0/16" \
+      --description="Allow health check traffic" \
+      --target-tags="http-server"
+```
+
+```bash
+export NETWORK_NAME="default"
+export FWRULE_NAME="fw-allow-health-checks"
+
+gcloud compute firewall-rules create $FWRULE_NAME \
+--network $NETWORK_NAME \
+--action allow \
+--target-tags allow-health-checks \
+--source-ranges 130.211.0.0/22,35.191.0.0/16 \
+--rules tcp:80
+```
+
+### Create firewall rule to allow ALL internal traffic within the network 'on-prem'
+```bash
+gcloud compute firewall-rules create on-prem-allow-internal \
+  --network on-prem \
+  --allow tcp:0-65535,udp:0-65535,icmp \
+  --source-ranges 192.168.0.0/16
 ```
 
 ## Cloud Storage
