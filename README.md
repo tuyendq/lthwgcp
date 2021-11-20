@@ -248,7 +248,44 @@ gcloud pubsub subscriptions pull --auto-ack $SUBSCRIPTION
 List 'network' resource types  
 ```bash
 gcloud deployment-manager types list | grep network
+gcloud deployment-manager types list | grep subnetwork
+gcloud deployment-manager types list | grep firewall
 ```
+
+customnetwork-template.jinja:  
+```yaml
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.network
+  properties:
+    autoCreateSubnetworks: false
+
+```
+
+subnetwork-template.jinja:  
+```yaml
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.subnetwork
+  properties:
+    ipCidrRange: {{ properties["ipCidrRange"] }}
+    network: {{ properties["network"] }}
+    region: {{ properties["region"] }}
+
+```
+
+firewall-template.jinja:  
+```yaml
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.firewall
+  properties:
+    network: {{ properties["network"] }}
+    sourceRanges: ["0.0.0.0/0"]
+    allowed:
+    - IPProtocol: {{ properties["IPProtocol"] }}
+      ports: {{ properties["Port"] }}
+
 
 ### Create VM
 create-vm.yaml file
