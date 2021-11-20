@@ -25,11 +25,28 @@ gcloud compute instances create vm-standard --machine-type=n1-standard-1 --subne
 --network-tier STANDARD
 
 ```
+
+Create an install, install nginx-light  
 ```bash
 gcloud compute instances create nginx-vm \
 --zone us-central1-a \
 --machine-type f1-micro \
 --metadata startup-script=sudo\ apt\ update$'\n'sudo\ apt\ install\ -y\ nginx-light$'\n'sudo\ systemctl\ enable\ nginx$'\n'sudo\ service\ nginx\ start
+```
+
+Create an instance, instal apache2  
+```bash
+gcloud compute instances create web-server \
+--subnet vpc-subnet \
+--zone us-central1-a \
+--machine-type f1-micro \
+--tags http-server \
+--metadata=startup-script='#! /bin/bash
+  apt update
+  apt -y install apache2
+  cat <<EOF > /var/www/html/index.html
+  <!doctype html><html><body><h1>Hello World!</h1></body></html>'
+
 ```
 
 ### Create VM with multiple network interfaces
