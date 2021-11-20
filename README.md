@@ -246,3 +246,10 @@ resources:
 ```bash
  gcloud deployment-manager deployments create create-vm --config create-vm.yaml
 ```
+
+## Logging
+
+List all logs  
+```bash
+gcloud logging logs list
+```
