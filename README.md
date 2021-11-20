@@ -244,6 +244,12 @@ gcloud pubsub subscriptions pull --auto-ack $SUBSCRIPTION
 
 
 ## Deployment Manager
+
+List 'network' resource types  
+```bash
+gcloud deployment-manager types list | grep network
+```
+
 ### Create VM
 create-vm.yaml file
 Replace [PROJECT_ID]
