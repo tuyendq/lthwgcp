@@ -44,9 +44,11 @@ gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type
 
 ```bash
 gcloud compute instances describe web-server \
+  --zone us-central1-a \
   --format='get(networkInterfaces[0].networkIP)'
 
 gcloud compute instances describe web-server \
+  --zone us-central1-a \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
 ```
 
