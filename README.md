@@ -40,6 +40,15 @@ gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type
     --network-interface subnet=mynetwork
 ```
 
+### Get internal and external IP Address
+
+```bash
+gcloud compute instances describe web-server \
+  --format='get(networkInterfaces[0].networkIP)'
+
+gcloud compute instances describe web-server \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+```
 
 ## VPC Network
 
