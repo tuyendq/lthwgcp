@@ -254,6 +254,16 @@ gcloud deployment-manager types list | grep network
 create-vm.yaml file
 Replace [PROJECT_ID]
 
+autonetwork-template.jinja:  
+```yaml
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.network
+  properties:
+    # RESOURCE properties go here
+    autoCreateSubnetworks: true
+```
+
 ```yaml
 resources:
 - name: myfirstvm
