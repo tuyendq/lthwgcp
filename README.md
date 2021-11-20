@@ -15,6 +15,16 @@ export PROJECT_ID=$(gcloud config get-value project)
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute Engine default service account" --format='value(email)')
 ```
 
+## API Services
+
+```bash
+gcloud services list --available
+```
+
+```bash
+gcloud services enable deploymentmanager.googleapis.com
+```
+
 ## Computer Engine
 
 ### Create VM
