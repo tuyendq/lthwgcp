@@ -137,7 +137,24 @@ gcloud compute instances describe web-server \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
 ```
 
+Delete a VM instance  
+```bash
+gcloud compute instances delete web-server \
+  --zone us-central1-a
+```
+
+SSH to VM  
+```bash
+gcloud compute ssh web-server \
+  --zone us-central1-a
+```
+
 ## VPC Network
+
+Create auto-mode network  
+```bash
+gcloud compute networks create mynetwork --subnet-mode=auto
+```
 
 ### Create two custom VPC networks managementnet and privatenet
 ```bash
@@ -155,7 +172,24 @@ gcloud compute networks subnets create vpc-subnet --network=vpc-net \
 
 ```
 
+Enable VPC Flow logs  
+```
+gcloud compute networks subnets update default \
+--region us-central1 --enable-flow-logs \
+--logging-metadata=include-all
+
+gcloud compute networks subnets update default \
+--region europe-west1 --no-enable-flow-logs
+```
+
+Delete a VPC network  
+```bash
+gcloud compute networks delete default
+gcloud compute networks delete default --quiet
+```
+
 ### VPC Network Peering
+
 ```bash
 export project_a=$(gcloud config get-value project)
 export project_b=$(gcloud config get-value project)
@@ -208,9 +242,14 @@ gcloud compute routers create vpc-demo-router1 \
 
 ## Firewall rules
 
-### List all firewall rules
+### List firewall rules
+
 ```bash
 gcloud compute firewall-rules list
+
+gcloud compute firewall-rules list \
+--filter="network:mynetwork"
+
 ```
 
 ```bash
@@ -254,6 +293,14 @@ gcloud compute firewall-rules create on-prem-allow-internal \
 gcloud compute firewall-rules create on-prem-allow-ssh-icmp \
     --network on-prem \
     --allow tcp:22,icmp
+```
+
+Update priority of firewall rule  
+```
+gcloud compute firewall-rules create \
+mynetwork-ingress-deny-icmp-all --network \
+mynetwork --action DENY --direction INGRESS --rules icmp \
+--priority 500
 ```
 
 ## Cloud Storage
