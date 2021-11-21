@@ -1,6 +1,11 @@
 # Learn the hard Way - Google Cloud Platform
 
-Follow Coursera Specilization
+Follow Coursera Specializations:  
+- [Architecting with Google Compute Engine Specialization](https://www.coursera.org/specializations/gcp-architecture)  
+- [Networking in Google Cloud Specialization](https://www.coursera.org/specializations/networking-google-cloud-platform)  
+- [Security in Google Cloud Specialization](https://www.coursera.org/specializations/security-google-cloud-platform)  
+- [Architecting with Google Kubernetes Engine Specialization](https://www.coursera.org/specializations/architecting-google-kubernetes-engine)  
+- [Architecting Hybrid Cloud Infrastructure with Anthos Specialization](https://www.coursera.org/specializations/architecting-hybrid-cloud-infrastructure-anthos)  
 
 =======
 ## Common environment variable
