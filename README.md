@@ -6,6 +6,8 @@ Follow Coursera Specializations:
 - [Security in Google Cloud Specialization](https://www.coursera.org/specializations/security-google-cloud-platform)  
 - [Architecting with Google Kubernetes Engine Specialization](https://www.coursera.org/specializations/architecting-google-kubernetes-engine)  
 - [Architecting Hybrid Cloud Infrastructure with Anthos Specialization](https://www.coursera.org/specializations/architecting-hybrid-cloud-infrastructure-anthos)  
+- [Developing Applications with Google Cloud Specialization](https://www.coursera.org/specializations/developing-apps-gcp)  
+
 
 =======
 ## Common environment variable
@@ -19,6 +21,57 @@ export PROJECT_ID=$(gcloud config get-value project)
 ```bash
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute Engine default service account" --format='value(email)')
 ```
+
+## IAM
+
+List all roles:  
+```bash
+gcloud iam roles list --project $DEVSHELL_PROJECT_ID
+gcloud iam roles list --project $DEVSHELL_PROJECT_ID \
+--show-deleted
+```
+
+Create role:  
+```bash
+gcloud iam roles create privacy_reviewer --project \
+$DEVSHELL_PROJECT_ID --file privacyreviewer.yaml
+
+gcloud iam roles create app_viewer --project \
+$DEVSHELL_PROJECT_ID --file role.yaml
+
+```
+
+```bash
+gcloud iam roles describe app_viewer --project \
+$DEVSHELL_PROJECT_ID
+
+```
+
+Update role:  
+```bash
+gcloud iam roles update app_viewer --project \
+$DEVSHELL_PROJECT_ID --file update-role.yaml
+
+```
+
+Disable role:  
+```bash
+gcloud iam roles update app_viewer --project \
+$DEVSHELL_PROJECT_ID --stage DISABLED
+
+```
+
+Delete and Undelte role:  
+```bash
+gcloud iam roles delete app_viewer --project \
+$DEVSHELL_PROJECT_ID
+
+gcloud iam roles undelete app_viewer --project \
+$DEVSHELL_PROJECT_ID
+
+```
+
+
 
 ## API Services
 
