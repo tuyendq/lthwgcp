@@ -162,7 +162,11 @@ gcloud container clusters resize $my_cluster --zone $my_zone --num-nodes=4
 ```
 
 ```bash
-gcloud container clusters get-credentials --zone $my_zone
+# Configure tab completion for the kubectl command-line tool.
+source <(kubectl completion bash)
+# Configure access to your cluster for kubectl:
+gcloud container clusters get-credentials $my_cluster --zone $my_zone
+
 kubectl get nodes
 kubectl get pods
 kubectl get services
