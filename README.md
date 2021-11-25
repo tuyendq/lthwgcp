@@ -149,6 +149,27 @@ gcloud compute ssh web-server \
   --zone us-central1-a
 ```
 
+## Kubernetes Engine
+
+```bash
+export my_zone=us-central1-a
+export my_cluster=standard-cluster-1
+
+gcloud container clusters create $my_cluster --num-nodes 3 --zone $my_zone --enable-ip-alias
+
+gcloud container clusters resize $my_cluster --zone $my_zone --num-nodes=4
+
+```
+
+```bash
+gcloud container clusters get-credentials --zone $my_zone
+kubectl get nodes
+kubectl get pods
+kubectl get services
+
+```
+
+
 ## VPC Network
 
 Create auto-mode network  
