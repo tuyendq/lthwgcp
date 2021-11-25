@@ -72,7 +72,6 @@ $DEVSHELL_PROJECT_ID
 ```
 
 
-
 ## API Services
 
 ```bash
@@ -376,6 +375,14 @@ gcloud pubsub subscriptions create $SUBSCRIPTION --topic=$TOPIC
 gcloud pubsub subscriptions pull --auto-ack $SUBSCRIPTION
 ```
 
+## MySQL
+
+```bash
+gcloud services enable sqladmin.googleapis.com
+
+gcloud sql instances create sql-instance --tier=db-n1-standard-2 --region=us-central1
+
+```
 
 ## Deployment Manager
 
