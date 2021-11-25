@@ -83,6 +83,10 @@ gcloud services list --available
 gcloud services enable deploymentmanager.googleapis.com
 ```
 
+```bash
+gcloud services enable sqladmin.googleapis.com
+```
+
 ## Computer Engine
 
 ### Create VM
