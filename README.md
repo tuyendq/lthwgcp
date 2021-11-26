@@ -76,22 +76,21 @@ $DEVSHELL_PROJECT_ID
 
 ```bash
 gcloud services list --available
+gcloud services list --available | grep dataproc
+gcloud services list --enabled
 ```
 
 ```bash
 gcloud services enable deploymentmanager.googleapis.com
-```
 
-```bash
 gcloud services enable sqladmin.googleapis.com
-```
 
-```bash
 gcloud services enable appengine.googleapis.com
-```
 
-```bash
 gcloud services enable cloudscheduler.googleapis.com
+
+gcloud services enable dataproc.googleapis.com
+
 ```
 
 ## Computer Engine
