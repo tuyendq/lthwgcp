@@ -382,12 +382,22 @@ gcloud services enable sqladmin.googleapis.com
 
 export REGION=us-central1
 export SQL_INSTANCE_ID=sql-instance
+export MYSQL_DATABASE=wordpress
+export MYSQL_USER=wp_user
+export MYSQL_PASSWORD=wp_storm
 
 gcloud sql instances create $SQL_INSTANCE_ID --tier=db-n1-standard-2 --region=$REGION
 
 gcloud sql instances create $SQL_INSTANCE_ID --tier=g1-small --region=$REGION
 
 export INSTANCE_CONNECTION_NAME=\${DEVSHELL_PROJECT_ID}:\${REGION}:\${SQL_INSTANCE_ID}
+
+gcloud sql databases create $MYSQL_DATABASE --instance=$SQL_INSTANCE_ID
+
+gcloud sql users create $MYSQL_USER --host="%" --instance=$SQL_INSTANCE_ID --password="$MYSQL_PASSWORD"
+
+gcloud sql connect $SQL_INSTANCE_ID --user=root --quiet  # Default root's password is blank
+
 
 ```
 
