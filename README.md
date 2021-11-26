@@ -380,7 +380,14 @@ gcloud pubsub subscriptions pull --auto-ack $SUBSCRIPTION
 ```bash
 gcloud services enable sqladmin.googleapis.com
 
-gcloud sql instances create sql-instance --tier=db-n1-standard-2 --region=us-central1
+export REGION=us-central1
+export SQL_INSTANCE_ID=sql-instance
+
+gcloud sql instances create $SQL_INSTANCE_ID --tier=db-n1-standard-2 --region=$REGION
+
+gcloud sql instances create $SQL_INSTANCE_ID --tier=g1-small --region=$REGION
+
+export INSTANCE_CONNECTION_NAME=\${DEVSHELL_PROJECT_ID}:\${REGION}:\${SQL_INSTANCE_ID}
 
 ```
 
