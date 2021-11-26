@@ -86,6 +86,14 @@ gcloud services enable deploymentmanager.googleapis.com
 gcloud services enable sqladmin.googleapis.com
 ```
 
+```bash
+gcloud services enable appengine.googleapis.com
+```
+
+```bash
+gcloud services enable cloudscheduler.googleapis.com
+```
+
 ## Computer Engine
 
 ### Create VM
