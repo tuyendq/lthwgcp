@@ -34,6 +34,17 @@ PROJECT_ID@appspot.gserviceaccount.com
 PROJECT_NUMBER@cloudservices.gserviceaccount.com
 ```
 
+Create a service account:  
+```bash
+gcloud iam service-accounts create my-sa-123 --display-name "my service account"
+```
+
+```bash
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member serviceAccount:my-sa-123@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com --role roles/editor
+```
+
+
 List all roles:  
 ```bash
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID
@@ -137,6 +148,13 @@ gcloud compute instances create web-server \
 
 ```
 
+Create a new instance and authorize it to run as a custom service account:  
+```bash
+gcloud compute instances create example-vm \
+    --service-account 123-my-sa@my-project-123.iam.gserviceaccount.com \
+    --scopes https://www.googleapis.com/auth/cloud-platform
+```
+
 ### Create VM with multiple network interfaces
 ```bash
 gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type=n1-standard-4 \
@@ -168,6 +186,22 @@ SSH to VM
 gcloud compute ssh web-server \
   --zone us-central1-a
 ```
+
+
+```bash
+export DISK_NAME=encrypted-disk-1
+export DISK_SIZE=500
+export DISK_TYPE=pd-standard
+export ZONE=us-central1-a
+
+gcloud beta compute disks create $DISK_NAME \
+  --zone $ZONE \
+  --size $DISK_SIZE \
+  --type $DISK_TYPE \
+  --csek-key-file rsawrapencodedkey.json
+```
+
+
 
 ## Kubernetes Engine
 
