@@ -24,6 +24,16 @@ export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute
 
 ## IAM
 
+User-managed service accounts:  
+```
+# Default Compute Engine service account
+PROJECT_NUMBER-compute@developer.gserviceaccount.com
+# Default App Engine service account
+PROJECT_ID@appspot.gserviceaccount.com
+# Google APIs service account
+PROJECT_NUMBER@cloudservices.gserviceaccount.com
+```
+
 List all roles:  
 ```bash
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID
