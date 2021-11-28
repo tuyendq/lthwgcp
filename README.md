@@ -127,6 +127,8 @@ gcloud services enable cloudscheduler.googleapis.com
 
 gcloud services enable dataproc.googleapis.com
 
+gcloud services enable cloudkms.googleapis.com
+
 ```
 
 ## Computer Engine
