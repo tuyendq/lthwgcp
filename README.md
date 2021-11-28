@@ -595,3 +595,29 @@ gs://$DEVSHELL_PROJECT_ID-kms
 gsutil kms encryption gs://$DEVSHELL_PROJECT_ID-kms
 
 ```
+
+## BigQuery
+
+
+```bash
+bq --location=US mk -d \
+--default_table_expiration 3600 \
+--description "This is my dataset." \
+source_data
+
+bq load --autodetect $DEVSHELL_PROJ:source_data.events gs://cloud-training/gcpsec/labs/bq-authviews-source.csv
+
+bq --location=US mk -d \
+--default_table_expiration 3600 \
+--description "This is my dataset." \
+analyst_views
+
+```
+
+```bash
+bq query --use_legacy_sql=false \
+'SELECT
+   COUNT(*)
+ FROM
+   `bigquery-public-data`.samples.shakespeare'
+```
