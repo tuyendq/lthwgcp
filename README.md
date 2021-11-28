@@ -559,3 +559,39 @@ List all logs
 ```bash
 gcloud logging logs list
 ```
+
+## Cloud KMS
+
+```bash
+gcloud services enable cloudkms.googleapis.com
+
+export KEYRING_NAME=lab-keyring
+export CRYPTOKEY_1_NAME=labkey-1
+export CRYPTOKEY_2_NAME=labkey-2
+
+gcloud kms keyrings create $KEYRING_NAME --location us
+
+gcloud kms keys create $CRYPTOKEY_1_NAME --location us \
+--keyring $KEYRING_NAME --purpose encryption
+
+gcloud kms keys create $CRYPTOKEY_2_NAME --location us \
+--keyring $KEYRING_NAME --purpose encryption
+
+gcloud kms keys list --keyring $KEYRING_NAME --location us
+
+gsutil kms authorize -p $DEVSHELL_PROJECT_ID -k \
+projects/$DEVSHELL_PROJECT_ID/locations/us/keyRings\
+/$KEYRING_NAME/cryptoKeys/$CRYPTOKEY_1_NAME
+gsutil kms authorize -p $DEVSHELL_PROJECT_ID -k \
+projects/$DEVSHELL_PROJECT_ID/locations/us/keyRings\
+/$KEYRING_NAME/cryptoKeys/$CRYPTOKEY_2_NAME
+
+
+gsutil kms encryption -k \
+projects/$DEVSHELL_PROJECT_ID/locations/us/keyRings\
+/$KEYRING_NAME/cryptoKeys/$CRYPTOKEY_1_NAME \
+gs://$DEVSHELL_PROJECT_ID-kms
+
+gsutil kms encryption gs://$DEVSHELL_PROJECT_ID-kms
+
+```
