@@ -59,6 +59,12 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member serviceAccount:cseklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com --role roles/storage.admin
 ```
 
+```bash
+gcloud projects add-iam-policy-binding ${GOOGLE_CLOUD_PROJECT} \
+--member=serviceAccount:team-a-dev@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com  \
+--role=roles/container.clusterViewer
+```
+
 
 List all roles:  
 ```bash
@@ -238,10 +244,24 @@ source <(kubectl completion bash)
 # Configure access to your cluster for kubectl:
 gcloud container clusters get-credentials $my_cluster --zone $my_zone
 
+kubectl get namespace
+kubectl create namespace team-a
 kubectl get nodes
 kubectl get pods
 kubectl get services
+kubectl get services --namespace=kube-system
 
+```
+
+```bash
+kubectl create role pod-reader \
+--resource=pods --verb=watch --verb=get --verb=list
+```
+
+Resource Quotas:  
+```bash
+kubectl create quota test-quota \
+--hard=count/pods=2,count/services.loadbalancers=1 --namespace=team-a
 ```
 
 
