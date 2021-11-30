@@ -226,7 +226,7 @@ gcloud beta compute disks create $DISK_NAME \
 
 
 
-## Kubernetes Engine
+## Kubernetes Engine (GKE)
 
 ```bash
 export my_zone=us-central1-a
@@ -243,6 +243,11 @@ gcloud container clusters resize $my_cluster --zone $my_zone --num-nodes=4
 source <(kubectl completion bash)
 # Configure access to your cluster for kubectl:
 gcloud container clusters get-credentials $my_cluster --zone $my_zone
+
+kubectl create deployment hello-app \
+  --image=gcr.io/google-samples/hello-app:2.0
+
+kubectl expose deployment hello-app --name=hello-app-service --type=LoadBalancer --port 80 --target-port 8080
 
 kubectl get namespace
 kubectl create namespace team-a
