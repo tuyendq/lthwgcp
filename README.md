@@ -65,6 +65,13 @@ gcloud projects add-iam-policy-binding ${GOOGLE_CLOUD_PROJECT} \
 --role=roles/container.clusterViewer
 ```
 
+Remove role:  
+```bash
+gcloud projects remove-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
+--member='user:student-03-7828661fb9a2@qwiklabs.net' \
+--role='roles/viewer'
+```
+
 
 List all roles:  
 ```bash
