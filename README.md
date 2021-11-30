@@ -705,3 +705,15 @@ gcloud beta compute health-checks create tcp http-health-check-1 \
   --unhealthy-threshold=3 \
   --healthy-threshold=2
 ```
+
+## Cloud Function
+
+Deploy a nodejs cloud function from cloud shell (index.js, package.json files are in current directory):  
+```bash
+gcloud functions deploy memories-thumbnail-generator \
+--entry-point thumbnail \
+--runtime nodejs14 \
+--trigger-resource $BUCKET_NAME \
+--trigger-event google.storage.object.finalize
+
+```
