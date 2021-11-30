@@ -142,6 +142,10 @@ gcloud services enable dataproc.googleapis.com
 
 gcloud services enable cloudkms.googleapis.com
 
+gcloud services enable iap.googleapis.com
+
+gcloud services enable secretmanager.googleapis.com
+
 ```
 
 ## Computer Engine
@@ -716,4 +720,19 @@ gcloud functions deploy memories-thumbnail-generator \
 --trigger-resource $BUCKET_NAME \
 --trigger-event google.storage.object.finalize
 
+```
+
+## IAP - Identity-Aware Proxy
+
+```bash
+
+
+```
+
+## Secret Manager
+
+```bash
+gcloud secrets create my-secret
+gcloud secrets versions access 1 --secret="password"
+gcloud secrets versions access 2 --secret="password"
 ```
