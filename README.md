@@ -225,6 +225,42 @@ gcloud beta compute disks create $DISK_NAME \
 ```
 
 
+```bash
+export REGION=us-central1
+export INSTANCE_TEMPLATE_NAME="us-central1-template"
+export SUBNET_NAME="default"
+export STARTUP_SCRIPT_URL="gs://cloud-training/gcpnet/httplb/startup.sh"
+
+gcloud compute instance-templates create $INSTANCE_TEMPLATE_NAME \
+--description "us-central1-template" \
+--region $REGION \
+--subnet $SUBNET_NAME \
+--tags allow-health-checks \
+--metadata startup-script-url=$STARTUP_SCRIPT_URL
+
+export INSTANCE_GROUP_NAME=us-central1-mig
+export REGION=us-central1
+export ZONE=us-central1-a
+export INSTANCE_TEMPLATE_NAME="us-central1-template"
+
+gcloud compute instance-groups managed create $INSTANCE_GROUP_NAME \
+--region $REGION \
+--zone $ZONE \
+--template $INSTANCE_TEMPLATE_NAME \
+--size 1
+
+gcloud compute instance-groups managed set-autoscaling $INSTANCE_GROUP_NAME \
+--scale-based-on-cpu \
+--target-cpu-utilization 0.8 \
+--min-num-replicas 1 \
+--max-num-replicas 5 \
+--cool-down-period 45 \
+--region $REGION
+
+
+```
+
+
 
 ## Kubernetes Engine (GKE)
 
