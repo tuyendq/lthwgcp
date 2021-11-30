@@ -646,3 +646,19 @@ bq query --use_legacy_sql=false \
  FROM
    `bigquery-public-data`.samples.shakespeare'
 ```
+
+## Health Check
+
+```bash
+gcloud compute health-checks create http http-health-check \
+    --port 80
+
+gcloud beta compute health-checks create tcp http-health-check-1 \
+  --project=qwiklabs-gcp-00-fed15f8afb6e \
+  --port=80 --proxy-header=NONE \
+  --no-enable-logging \
+  --check-interval=10 \
+  --timeout=5 \
+  --unhealthy-threshold=3 \
+  --healthy-threshold=2
+```
