@@ -502,6 +502,15 @@ gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME/ada.jpg
 # gsutil acl ch -d AllUsers gs://$BUCKET_NAME/ada.jpg
 ```
 
+Enable logging within a bucket:  
+```bash
+export BUCKET_NAME=$(gcloud config get-value project)
+gsutil mb gs://$BUCKET_NAME
+gsutil mk gs://$BUCKET_NAME-logs
+gsutil acl ch -g cloud-storage-analytics@google.com:W gs://$BUCKET_NAME-logs
+gsutil defsack set project-private gs://$BUCKET_NAME-logs
+gsutil logging set on -b gs://$BUCKET_NAME-logs gs://$BUCKET_NAME
+```
 
 ## Pub/Sub
 
