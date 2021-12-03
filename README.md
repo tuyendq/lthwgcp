@@ -172,6 +172,8 @@ Create an instance, instal apache2
 gcloud compute instances create web-server \
 --subnet vpc-subnet \
 --zone us-central1-a \
+--image-family debian-9 \
+--image-project debian-cloud \
 --machine-type f1-micro \
 --tags http-server \
 --metadata=startup-script='#! /bin/bash
