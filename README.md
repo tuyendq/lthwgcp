@@ -745,3 +745,18 @@ gcloud secrets create my-secret
 gcloud secrets versions access 1 --secret="password"
 gcloud secrets versions access 2 --secret="password"
 ```
+
+## Cloud Armor
+
+```bash
+gcloud compute security-policies rules create 1000 \
+    --security-policy $POLICY_NAME \
+    --description "deny traffic from access-test VM" \
+    --src-ip-ranges "35.244.71.114" \
+    --action "deny-404"
+
+gcloud compute backend-services update web-backend \
+    --security-policy $POLICY_NAME \
+    --global
+
+```
