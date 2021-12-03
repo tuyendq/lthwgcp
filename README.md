@@ -197,6 +197,30 @@ gcloud compute instances create vm-appliance --zone=us-central1-c --machine-type
     --network-interface subnet=mynetwork
 ```
 
+```bash
+export INSTANCE_NAME=windows-server
+export ZONE=us-central1-a
+
+gcloud compute instances create $INSTANCE_NAME \
+    --zone $ZONE \
+    --image-family windows-2019-core \
+    --image-project windows-cloud \
+    --tags http-server,https-server
+
+gcloud compute instances get-serial-port-output $INSTANCE_NAME
+
+gcloud compute instances add-metadata $INSTANCE_NAME \
+    --zone $ZONE \
+    --metadata=serial-port-enable=TRUE
+
+gcloud compute connect-to-serial-port $INSTANCE_NAME \
+    --port=2 \
+    --zone=$ZONE \
+    --project=$DEVSHELL_PROJECT_ID
+
+
+```
+
 ### Get internal and external IP Address
 
 ```bash
