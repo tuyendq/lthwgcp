@@ -665,6 +665,23 @@ resources:
 List all logs  
 ```bash
 gcloud logging logs list
+
+export DATASET_ID=project_logs
+bq --location=US mk -d $DATASET_ID
+
+export SINK_NAME=vm_logs
+gcloud beta logging sinks create $SINK_NAME \
+bigquery.googleapis.com/projects/$DEVSHELL_PROJECT_ID/datasets/$DATASET_ID \
+  --log-filter='resource.type="gce_instance"'
+
+export SINK_NAME=load_bal_logs
+gcloud beta logging sinks create $SINK_NAME \
+bigquery.googleapis.com/projects/$DEVSHELL_PROJECT_ID/datasets/$DATASET_ID \
+  --log-filter='resource.type="http_load_balancer"'
+
+gcloud logging read "resource.type=gce_instance AND logName=projects/[PROJECT_ID]/logs/syslog AND textPayload:SyncAddress" \
+  --limit 10 \
+  --format json
 ```
 
 ## Cloud KMS
