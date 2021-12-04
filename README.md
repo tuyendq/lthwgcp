@@ -22,7 +22,7 @@ export PROJECT_ID=$(gcloud config get-value project)
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:Compute Engine default service account" --format='value(email)')
 ```
 
-## IAM
+## IAM & Admin
 
 User-managed service accounts:  
 ```
@@ -120,6 +120,14 @@ $DEVSHELL_PROJECT_ID
 
 ```
 
+Get and set project's IAM policy:  
+```
+gcloud projects get-iam-policy $DEVSHELL_PROJECT_ID \
+--format=json >./policy.json
+
+gcloud projects set-iam-policy $DEVSHELL_PROJECT_ID \
+--format=json >./policy.json
+```
 
 ## API Services
 
@@ -685,6 +693,11 @@ gcloud logging read "resource.type=gce_instance AND logName=projects/[PROJECT_ID
   --limit 10 \
   --format json
 ```
+
+### Cloud Audit Logs
+Three audit logs: Admin Activity, System Event, Data Access.  
+
+
 
 ## Cloud KMS
 
