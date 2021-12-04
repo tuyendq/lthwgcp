@@ -136,6 +136,8 @@ gcloud services enable sqladmin.googleapis.com
 
 gcloud services enable appengine.googleapis.com
 
+gcloud services enable container.googleapis.com
+
 gcloud services enable cloudscheduler.googleapis.com
 
 gcloud services enable dataproc.googleapis.com
