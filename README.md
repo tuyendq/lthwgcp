@@ -77,7 +77,7 @@ List IAM testable **permissions** for a resource:
 gcloud iam list-testable-permissions //cloudresourcemanager.googleapis.com/projects/$DEVSHELL_PROJECT_ID
 ```
  
-List all **roles**:  
+List *custom roles** in a **project**:  
 ```bash
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID \
@@ -87,6 +87,11 @@ gcloud iam roles list --project $DEVSHELL_PROJECT_ID \
 View role's metadata:  
 ```bash
 gcloud iam roles describe roles/viewer
+```
+
+List grantable roles from your project:  
+```bash
+gcloud iam list-grantable-roles //cloudresourcemanager.googleapis.com/projects/$DEVSHELL_PROJECT_ID
 ```
 
 Create role:  
@@ -124,6 +129,7 @@ Delete and Undelte role:
 gcloud iam roles delete app_viewer --project \
 $DEVSHELL_PROJECT_ID
 
+# Within the 7 days window you can undelete a role
 gcloud iam roles undelete app_viewer --project \
 $DEVSHELL_PROJECT_ID
 
@@ -136,6 +142,50 @@ gcloud projects get-iam-policy $DEVSHELL_PROJECT_ID \
 
 gcloud projects set-iam-policy $DEVSHELL_PROJECT_ID \
 --format=json >./policy.json
+```
+
+role-template.yaml  :
+```yaml
+title: [ROLE_TITLE]
+description: [ROLE_DESCRIPTION]
+stage: [LAUNCH_STAGE]
+includedPermissions:
+- [PERMISSION_1]
+- [PERMISSION_2]
+```
+
+role-definition.yaml  :
+```yaml
+title: "Role Editor"
+description: "Edit access for App Versions"
+stage: "ALPHA"
+includedPermissions:
+- appengine.versions.create
+- appengine.versions.delete
+```
+
+```bash
+gcloud iam roles create editor --project $DEVSHELL_PROJECT_ID \
+--file role-definition.yaml
+```
+
+Create a custom role using flags:  
+```bash
+gcloud iam roles create viewer --project $DEVSHELL_PROJECT_ID \
+--title "Role Viewer" --description "Custom role description." \
+--permissions compute.instances.get,compute.instances.list --stage ALPHA
+```
+
+Add permissions to a custom role:  
+```bash
+gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID \
+--add-permissions storage.buckets.get,storage.buckets.list
+```
+
+Remove permissions from a custom role:  
+```bash
+gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID \
+--remove-permissions storage.buckets.get,storage.buckets.list
 ```
 
 ## API Services
