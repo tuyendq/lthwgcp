@@ -84,6 +84,11 @@ gcloud iam roles list --project $DEVSHELL_PROJECT_ID \
 --show-deleted
 ```
 
+View role's metadata:  
+```bash
+gcloud iam roles describe roles/viewer
+```
+
 Create role:  
 ```bash
 gcloud iam roles create privacy_reviewer --project \
