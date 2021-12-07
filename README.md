@@ -72,8 +72,12 @@ gcloud projects remove-iam-policy-binding $GOOGLE_CLOUD_PROJECT \
 --role='roles/viewer'
 ```
 
-
-List all roles:  
+List IAM testable **permissions** for a resource:  
+```bash
+gcloud iam list-testable-permissions //cloudresourcemanager.googleapis.com/projects/$DEVSHELL_PROJECT_ID
+```
+ 
+List all **roles**:  
 ```bash
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID \
