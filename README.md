@@ -877,3 +877,26 @@ gcloud compute backend-services update web-backend \
     --global
 
 ```
+
+## Cloud Source Repositories
+
+```bash
+gcloud source repos create my_hugo_site
+gcloud source repos clone my_hugo_site
+
+```
+
+## Cloud Build
+
+```bash
+gcloud beta builds triggers create cloud-source-repositories \
+--name="commit-to-master-branch" \
+--description="Push to master" \
+--repo="	my_hugo_site" --branch-pattern="^master$" \
+--build-config="cloudbuild.yaml"
+
+```
+
+
+
+
