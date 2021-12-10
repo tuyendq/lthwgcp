@@ -894,6 +894,16 @@ gcloud source repos clone my_hugo_site
 
 ## Cloud Build
 
+```
+gcloud services enable cloudbuild.googleapis.com
+
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/helloworld
+
+docker run -d -p 8080:8080 gcr.io/$DEVSHELL_PROJECT_ID/helloworld
+
+
+```
+
 ```bash
 gcloud beta builds triggers create cloud-source-repositories \
 --name="commit-to-master-branch" \
@@ -907,6 +917,10 @@ gcloud beta builds triggers create cloud-source-repositories \
 
 ```bash
 gcloud services enable run.googleapis.com
+
+gcloud run deploy --image gcr.io/$DEVSHELL_PROJECT_ID/helloworld --max-instances=3
+
+gcloud beta run services delete helloworld
 
 ```
 
