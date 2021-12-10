@@ -205,7 +205,11 @@ gcloud services enable appengine.googleapis.com
 
 gcloud services enable container.googleapis.com
 
+gcloud services enable cloudbuild.googleapis.com
+
 gcloud services enable cloudscheduler.googleapis.com
+
+gcloud services enable run.googleapis.com
 
 gcloud services enable dataproc.googleapis.com
 
@@ -214,6 +218,8 @@ gcloud services enable cloudkms.googleapis.com
 gcloud services enable iap.googleapis.com
 
 gcloud services enable secretmanager.googleapis.com
+
+gcloud services enable firestore.googleapis.com
 
 ```
 
@@ -897,6 +903,10 @@ gcloud beta builds triggers create cloud-source-repositories \
 
 ```
 
+## Cloud Run
 
+```bash
+gcloud services enable run.googleapis.com
 
+```
 
