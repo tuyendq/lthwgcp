@@ -924,3 +924,20 @@ gcloud beta run services delete helloworld
 
 ```
 
+
+## Firestore
+
+```bash
+gcloud services enable firestore.googleapis.com
+
+gcloud alpha firestore databases create \
+--project=$DEVSHELL_PROJECT_ID --region=$REGION
+
+```
+
+## App Engine
+
+```bash
+gcloud services enable appengine.googleapis.com
+
+```
