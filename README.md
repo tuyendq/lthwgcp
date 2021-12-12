@@ -904,16 +904,17 @@ export IMAGE_NAME=helloworld
 
 gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/$IMAGE_NAME
 
-docker run -d -p 8080:8080 gcr.io/$DEVSHELL_PROJECT_ID/IMAGE_NAME
+docker run -d -p 8080:8080 gcr.io/$DEVSHELL_PROJECT_ID/$IMAGE_NAME
 
 
 ```
 
 ```bash
+export REPO_NAME=depops-demo
 gcloud beta builds triggers create cloud-source-repositories \
 --name="commit-to-master-branch" \
 --description="Push to master" \
---repo="	my_hugo_site" --branch-pattern="^master$" \
+--repo=$REPO_NAME --branch-pattern="^master$" \
 --build-config="cloudbuild.yaml"
 
 ```
