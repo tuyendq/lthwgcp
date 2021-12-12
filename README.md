@@ -16,6 +16,8 @@ Follow Coursera Specializations:
 export PROJECT_ID=$(gcloud config get-value project)
 
 export PROJECT_NUMBER=$(gcloud projects list --filter=$(gcloud config get-value project) --format="value(PROJECT_NUMBER)")
+
+export ACCOUNT=$(gcloud auth list --filter=status:ACTIVE --format="value(account)")
 ```
 
 ### Compute Engine default service account
