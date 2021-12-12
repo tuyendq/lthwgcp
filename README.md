@@ -14,6 +14,8 @@ Follow Coursera Specializations:
 ### Project ID
 ```bash
 export PROJECT_ID=$(gcloud config get-value project)
+
+export PROJECT_NUMBER=$(gcloud projects list --filter=$(gcloud config get-value project) --format="value(PROJECT_NUMBER)")
 ```
 
 ### Compute Engine default service account
