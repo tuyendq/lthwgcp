@@ -887,8 +887,11 @@ gcloud compute backend-services update web-backend \
 ## Cloud Source Repositories
 
 ```bash
-gcloud source repos create my_hugo_site
-gcloud source repos clone my_hugo_site
+export REPO_NAME=devops-repo
+gcloud source repos create $REPO_NAME \
+  --project $DEV_PROJECT_ID
+
+gcloud source repos clone $REPO_NAME
 
 ```
 
@@ -897,9 +900,11 @@ gcloud source repos clone my_hugo_site
 ```
 gcloud services enable cloudbuild.googleapis.com
 
-gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/helloworld
+export IMAGE_NAME=helloworld
 
-docker run -d -p 8080:8080 gcr.io/$DEVSHELL_PROJECT_ID/helloworld
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/$IMAGE_NAME
+
+docker run -d -p 8080:8080 gcr.io/$DEVSHELL_PROJECT_ID/IMAGE_NAME
 
 
 ```
