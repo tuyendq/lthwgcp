@@ -248,9 +248,12 @@ gcloud compute instances create nginx-vm \
 
 Create an instance, instal apache2  
 ```bash
-gcloud compute instances create web-server \
+export INSTANCE_NAME=windows-server
+export ZONE=us-central1-a
+
+gcloud compute instances create $INSTANCE_NAME \
 --subnet vpc-subnet \
---zone us-central1-a \
+--zone $ZONE \
 --image-family debian-9 \
 --image-project debian-cloud \
 --machine-type f1-micro \
