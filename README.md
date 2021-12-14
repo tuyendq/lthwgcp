@@ -954,3 +954,25 @@ gcloud alpha firestore databases create \
 gcloud services enable appengine.googleapis.com
 
 ```
+
+## Cloud Spanner
+
+```bash
+gcloud spanner instance-configs list
+
+export INSTANCE_ID="test-instance"
+export INSTANCE_NAME="Test Instance"
+export REGION=us-central1
+
+gcloud spanner instances create $INSTANCE_ID \
+--config=regional-$REGION \
+--description="$INSTANCE_NAME" \
+--nodes=3
+
+# Create a database
+
+export DB_NAME=example-db
+
+gcloud spanner databases create $DB_NAME --instance=$INSTANCE_ID
+
+```
