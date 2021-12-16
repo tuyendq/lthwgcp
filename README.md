@@ -302,7 +302,6 @@ gcloud compute connect-to-serial-port $INSTANCE_NAME \
     --zone=$ZONE \
     --project=$DEVSHELL_PROJECT_ID
 
-
 ```
 
 ### Get internal and external IP Address
@@ -329,6 +328,20 @@ gcloud compute ssh web-server \
   --zone us-central1-a
 ```
 
+Add and remove tags
+```bash
+export INSTANCE_NAME=web-server
+export TAGS=http-server
+export ZONE=us-central1-a
+
+gcloud compute instances add-tags $INSTANCE_NAME \
+    --zone $ZONE \
+    --tags $TAGS
+
+gcloud compute instances remove-tags $INSTANCE_NAME \
+    --zone $ZONE \
+    --tags $TAGS
+```
 
 ```bash
 export DISK_NAME=encrypted-disk-1
