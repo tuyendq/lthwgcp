@@ -988,4 +988,12 @@ export DB_NAME=example-db
 
 gcloud spanner databases create $DB_NAME --instance=$INSTANCE_ID
 
+gcloud spanner databases create testdb --instance=$INSTANCE_ID \
+    --ddl='CREATE TABLE mytable (a INT64, b INT64) PRIMARY KEY(a)'
+
+gcloud spanner databases execute-sql $DB_NAME \
+--instance=$INSTANCE_ID \
+--sql='SELECT * FROM MyTable WHERE MyKey = 1'
+
+
 ```
