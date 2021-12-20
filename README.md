@@ -203,6 +203,8 @@ gcloud services list --enabled
 ```bash
 gcloud services enable deploymentmanager.googleapis.com
 
+gcloud services enable cloudfunctions.googleapis.com
+
 gcloud services enable sqladmin.googleapis.com
 
 gcloud services enable appengine.googleapis.com
@@ -863,6 +865,11 @@ gcloud beta compute health-checks create tcp http-health-check-1 \
 ```
 
 ## Cloud Function
+
+```bash
+gcloud services enable cloudfunctions.googleapis.com
+
+```
 
 Deploy a nodejs cloud function from cloud shell (index.js, package.json files are in current directory):  
 ```bash
