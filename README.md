@@ -881,6 +881,20 @@ gcloud functions deploy memories-thumbnail-generator \
 
 ```
 
+```bash
+export FUNC_NAME=process-feedback
+export TOPIC_NAME="feedback"
+
+gcloud functions deploy $FUNC_NAME \
+--runtime nodejs14 \
+--entry-point subscribe
+--trigger-topic $TOPIC_NAME
+```
+
+```bash
+gcloud functions logs read --limit 50
+```
+
 ## IAP - Identity-Aware Proxy
 
 ```bash
