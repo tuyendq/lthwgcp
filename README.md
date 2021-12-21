@@ -211,6 +211,8 @@ gcloud services enable appengine.googleapis.com
 
 gcloud services enable container.googleapis.com
 
+gcloud services enable artifactregistry.googleapis.com
+
 gcloud services enable cloudbuild.googleapis.com
 
 gcloud services enable cloudscheduler.googleapis.com
@@ -397,6 +399,10 @@ gcloud compute instance-groups managed set-autoscaling $INSTANCE_GROUP_NAME \
 
 
 ## Kubernetes Engine (GKE)
+
+```bash
+gcloud services enable container.googleapis.com
+```
 
 ```bash
 export my_zone=us-central1-a
