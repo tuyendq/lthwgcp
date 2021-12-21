@@ -936,7 +936,7 @@ gcloud compute backend-services update web-backend \
 ```bash
 export REPO_NAME=devops-repo
 gcloud source repos create $REPO_NAME \
-  --project $DEV_PROJECT_ID
+  --project $DEVSHELL_PROJECT_ID
 
 gcloud source repos clone $REPO_NAME
 
