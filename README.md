@@ -1004,6 +1004,8 @@ gcloud app browse
 
 gcloud app describe
 
+gcloud app logs tail -s default
+
 ```
 
 ## Cloud Spanner
