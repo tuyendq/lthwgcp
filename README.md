@@ -993,6 +993,17 @@ gcloud alpha firestore databases create \
 ```bash
 gcloud services enable appengine.googleapis.com
 
+gcloud app regions list
+
+expore REGION=us-central
+gcloud app create --region $REGION
+
+gcloud app deploy
+
+gcloud app browse
+
+gcloud app describe
+
 ```
 
 ## Cloud Spanner
