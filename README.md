@@ -201,6 +201,8 @@ gcloud services list --enabled
 ```
 
 ```bash
+gcloud services enable compute.googleapis.com
+
 gcloud services enable deploymentmanager.googleapis.com
 
 gcloud services enable cloudfunctions.googleapis.com
@@ -231,7 +233,17 @@ gcloud services enable firestore.googleapis.com
 
 ```
 
-## Computer Engine
+## Compute Engine
+Google Compute Engine - GCE
+
+```bash
+gcloud services enable compute.googleapis.com
+
+export REGION=us-central1
+export ZONE=us-central1-f
+gcloud config set compute/region $REGION
+gcloud config set compute/zone $ZONE
+```
 
 ### Create VM
 ```bash
@@ -248,6 +260,17 @@ gcloud compute instances create nginx-vm \
 --zone us-central1-a \
 --machine-type f1-micro \
 --metadata startup-script=sudo\ apt\ update$'\n'sudo\ apt\ install\ -y\ nginx-light$'\n'sudo\ systemctl\ enable\ nginx$'\n'sudo\ service\ nginx\ start
+```
+
+Create an instance with startup-script stored in Cloud Storage  
+```bash
+export ZONE=us-central1-f
+export INSTANCE_NAME=backend
+gcloud compute instances create $INSTANCE_NAME \
+    --zone=$ZONE \      
+    --machine-type=n1-standard-1 \
+    --tags=backend \
+    --metadata=startup-script-url=https://storage.googleapis.com/fancy-store-$DEVSHELL_PROJECT_ID/startup-script.sh
 ```
 
 Create an instance, instal apache2  
