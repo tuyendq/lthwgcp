@@ -334,12 +334,14 @@ gcloud compute connect-to-serial-port $INSTANCE_NAME \
 ### Get internal and external IP Address
 
 ```bash
-gcloud compute instances describe web-server \
-  --zone us-central1-a \
+export INSTANCE_NAME=web-server
+export ZONE=us-central1-a
+gcloud compute instances describe $INSTANCE_NAME \
+  --zone $ZONE \
   --format='get(networkInterfaces[0].networkIP)'
 
-gcloud compute instances describe web-server \
-  --zone us-central1-a \
+gcloud compute instances describe $INSTANCE_NAME \
+  --zone $ZONE \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
 ```
 
