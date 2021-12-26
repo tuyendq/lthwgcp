@@ -904,8 +904,12 @@ gcloud services enable cloudfunctions.googleapis.com
 
 Deploy a nodejs cloud function from cloud shell (index.js, package.json files are in current directory):  
 ```bash
-gcloud functions deploy memories-thumbnail-generator \
+export FUNC_NAME=memories-thumbnail-generator
+export REGION=us-central1
+
+gcloud functions deploy $FUNC_NAME \
 --entry-point thumbnail \
+--region $REGION \
 --runtime nodejs14 \
 --trigger-resource $BUCKET_NAME \
 --trigger-event google.storage.object.finalize
@@ -920,6 +924,10 @@ gcloud functions deploy $FUNC_NAME \
 --runtime nodejs14 \
 --entry-point subscribe
 --trigger-topic $TOPIC_NAME
+```
+
+```bash
+gcloud functions describe $FUNC_NAME
 ```
 
 ```bash
