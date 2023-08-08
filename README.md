@@ -857,6 +857,7 @@ gsutil kms encryption gs://$DEVSHELL_PROJECT_ID-kms
 
 
 ```bash
+# Create a dataset - dataset_id: source_data
 bq --location=US mk -d \
 --default_table_expiration 3600 \
 --description "This is my dataset." \
@@ -864,6 +865,7 @@ source_data
 
 bq load --autodetect $DEVSHELL_PROJ:source_data.events gs://cloud-training/gcpsec/labs/bq-authviews-source.csv
 
+# Create a dataset - dataset_id: analyst_views
 bq --location=US mk -d \
 --default_table_expiration 3600 \
 --description "This is my dataset." \
